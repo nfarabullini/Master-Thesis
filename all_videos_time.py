@@ -35,7 +35,7 @@ for file in sorted(os.listdir(DATA_PATH)):
 # compute angle vectors for videos with first one as query
 newDF_AR = pd.DataFrame(index=range(29))
 i = 0
-for data in files_AR:
+for data in files_ls[0]:
     f = open(os.path.join(DATA_PATH, data), 'r')
     data = json.load(f)
     bodyvector1 = compute_angle_vector_new(data)
