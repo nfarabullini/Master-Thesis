@@ -4,9 +4,11 @@ import os
 import json
 import warnings
 import math
+import time
 warnings.filterwarnings('ignore')
 from metrics_msproject import compute_angle_vector
 
+start = time.time()
 def dtw(s, t):
     # number of columns in each df, corresponding to number of frames
     n, m = len(s.columns), len(t.columns)
@@ -28,15 +30,17 @@ def dtw(s, t):
             # take last min from a square box
             last_min = np.min([dtw_matrix[i - 1, j], dtw_matrix[i, j - 1], dtw_matrix[i - 1, j - 1]])
             dtw_matrix[i, j] = cost + last_min
-    return dtw_matrix[n, m]
+    dtw_final = dtw_matrix[n, m]/n
+    return dtw_final
 
-path = "./files_keyframes"
+path = "./files_dances"
 files_AR = []
 
 # extract json files corresponding to videos
 n = 0
 m = 0
-files_ls = [[] for i in range(0, 85)]
+#change back to 85 for full DB
+files_ls = [[] for i in range(0, 40)]
 
 # group files belonging to each video in a different sublist, combine all sublist into one list
 for file in sorted(os.listdir(path)):
@@ -57,18 +61,21 @@ for file in sorted(os.listdir(path)):
 # compute angle vectors for first video, it will be treated as the query
 newDF_AR = pd.DataFrame(index=range(29))
 i = 0
-for data in files_ls[0]:
-    f = open(os.path.join(path, data), 'r')
-    data = json.load(f)
-    bodyvector1 = compute_angle_vector(data)
-    new_bodyvector = pd.DataFrame(bodyvector1)
+#change back to 0 for full DB, not 1
+for data in files_ls[1]:
+    # for files_dances
+    if data != '.DS_Store':
+        f = open(os.path.join(path, data), 'r')
+        data = json.load(f)
+        bodyvector1 = compute_angle_vector(data)
+        new_bodyvector = pd.DataFrame(bodyvector1)
 
-    newDF_AR[i] = new_bodyvector
-    i += 1
-    f.close()
-
+        newDF_AR[i] = new_bodyvector
+        i += 1
+        f.close()
+dtw_ls = []
 # loop over all other videos to be compared with query
-for g in range(0, 85):
+for g in range(0, 40):
     i = 0
     # entries in this list are empty
     if g == 81 or g == 82 or g == 83 or g == 84 or g == 85:
@@ -76,16 +83,44 @@ for g in range(0, 85):
     newDF = pd.DataFrame(index=range(29))
     # compute angle vectors of each candidate video
     for data in files_ls[g]:
-        f = open(os.path.join(path, data), 'r')
-        d = json.load(f)
-        if g == 36 and i == 62:
-            continue
-        bodyvector1 = compute_angle_vector(d)
-        new_bodyvector = pd.DataFrame(bodyvector1)
+        # for files_dances
+        if data != '.DS_Store':
+            f = open(os.path.join(path, data), 'r')
+            d = json.load(f)
+            if g == 36 and i == 62:
+                continue
+            bodyvector1 = compute_angle_vector(d)
+            new_bodyvector = pd.DataFrame(bodyvector1)
 
-        newDF[i] = new_bodyvector
-        i += 1
-        f.close()
+            newDF[i] = new_bodyvector
+            i += 1
+            f.close()
     # compute DTW similarity
-    print(dtw(newDF, newDF_AR))
+    dtw_sim = dtw(newDF, newDF_AR)
+    # normalize measurement wrt length of df
+    dtw_sim = dtw_sim
+    dtw_ls.append([dtw_sim, g])
 
+# sort array wrt to sim measure, very inefficient method, but just needed to get an overview of results
+dtw_sorted = sorted(dtw_ls, key=lambda x: x[0])
+print(dtw_sorted)
+
+# create dendogram
+# import plotly.figure_factory as ff
+# import scipy.cluster.hierarchy as sch
+# df = pd.DataFrame(files_ls)
+# df = df.dropna(axis='columns')
+# A = df.to_numpy()
+# new = 1-A
+# y = new[np.triu_indices(68,1)]
+# labels = list(df.index)
+#
+# fig = ff.create_dendrogram(df, orientation='left', linkagefun=lambda x: sch.linkage(x, "average"),
+#                            color_threshold=0.3,
+#                            colorscale= ['skyblue', 'tan', 'teal', 'red', 'tomato', 'yellow','turquoise',
+#                                         'violet', 'wheat', 'white', 'whitesmoke','ellow', 'yellowgreen'])
+# fig.update_layout(width=1000, height=800,title="Dance Poses Clustering for Angle Similarity")
+
+
+end = time.time()
+print(end - start)
