@@ -5,6 +5,8 @@
   **report** -> Master Thesis: current updates on the master thesis work
   
   **DTW.py**: DTW similarity metric 
+  
   **DTW_cosSim.py**: DTW approach with implemented cosSim metrics instead of pure DTW
+  
   **cosSim.py**: cosine similarity metric taken from previous MSc project
   
