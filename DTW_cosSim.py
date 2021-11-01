@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 warnings.filterwarnings('ignore')
 from metrics_msproject import compute_angle_vector
 
-def dtw(s, t):
+def dtw_cosSim(s, t):
     # number of columns in each df, corresponding to number of frames
     n, m = len(s.columns), len(t.columns)
     dtw_matrix = np.zeros((n + 1, m + 1))
@@ -22,24 +22,29 @@ def dtw(s, t):
     dtw_matrix[0, 0] = 0
     for i in range(1, n + 1):
         for j in range(1, m + 1):
+            s_squared_sum = 0
+            t_squared_sum = 0
             sum_entries = 0
             # multi-dimensional case
             for k in range(0, len(s[i - 1]) - 1):
-                if not (math.isnan((s[i - 1][k] - t[j - 1][k]))):
-                    sum_entries += (s[i - 1][k] - t[j - 1][k])
+                if not (math.isnan((s[i - 1][k] * t[j - 1][k]))):
+                    sum_entries += (s[i - 1][k] * t[j - 1][k])
+                    s_squared_sum += pow(s[i - 1][k], 2)
+                    t_squared_sum += pow(t[j - 1][k], 2)
                 else:
                     continue
-            cost = abs(sum_entries)
+            cost = sum_entries/(math.sqrt(s_squared_sum)*math.sqrt(t_squared_sum))
+            # adjust cost with subtracting 1
+            cost = 1 - round(cost, 5)
             # take last min from a square box
-            last_min = np.min([dtw_matrix[i - 1, j], dtw_matrix[i, j - 1], dtw_matrix[i - 1, j - 1]])
-            dtw_matrix[i, j] = cost + last_min
+            last_max = np.min([dtw_matrix[i - 1, j], dtw_matrix[i, j - 1], dtw_matrix[i - 1, j - 1]])
+            dtw_matrix[i, j] = cost + last_max
     # divide by length of DTW path, aka the number of steps
     n_steps = dtw_steps(dtw_matrix, n, m)
     dtw_final = dtw_matrix[n, m]/n_steps
     return dtw_final
 
 start = time.time()
-
 path = "./files_keyframes"
 files_AR = []
 
@@ -51,9 +56,9 @@ files_AR = compute_query_ls(path)
 # compute angle vectors for first video, it will be treated as the query
 newDF_AR = compute_df_query(path, files_ls)
 
+dtw_sim_labels_ls = []
 dtw_sim_ls = []
 dtw_sim_labels = []
-dtw_sim_labels_ls = []
 # loop over all other videos to be compared with query
 for g in range(0, 85):
     i = 0
@@ -72,24 +77,25 @@ for g in range(0, 85):
         i += 1
         f.close()
     # compute DTW similarity
-    dtw_sim = dtw(newDF, newDF_AR)
+    dtw_sim = dtw_cosSim(newDF, newDF_AR)
     print(g)
     dtw_sim_labels_ls.append([dtw_sim, files_ls[g][0]])
     dtw_sim_ls.append(dtw_sim)
     dtw_sim_labels.append(files_ls[g][0])
 
+
 # sort array wrt to sim measure, very inefficient method, but just needed to get an overview of results
-dtw_sim_sorted = sorted(dtw_sim_labels_ls, key=lambda x: x[0])
-print(dtw_sim_sorted)
-file2 = open("DTW_ED.txt","w")
-file2.writelines(str(dtw_sim_sorted))
-file2.close()
+dtw_sorted = sorted(dtw_sim_labels_ls, key=lambda x: x[0])
+print(dtw_sorted)
+file1 = open("DTW_cosSim.txt","w")
+file1.writelines(str(dtw_sorted))
+file1.close()
 
 # create dendrogram
 Z = linkage(np.reshape(dtw_sim_ls, (len(dtw_sim_ls), 1)), 'single')
 plt.figure()
 dn = dendrogram(Z, labels=dtw_sim_labels)
-plt.savefig('./Dendrograms/DTW_dendro.png', format='png', bbox_inches='tight')
+plt.savefig('./Dendrograms/DTW_cosSim_dendro.png', format='png', bbox_inches='tight')
 
 # print time for simulation
 end = time.time()
