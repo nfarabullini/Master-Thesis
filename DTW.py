@@ -41,7 +41,6 @@ def dtw(s, t):
 start = time.time()
 
 path = "./files_keyframes"
-files_AR = []
 
 # extract json files corresponding to videos
 # group files belonging to each video in a different sublist, combine all sublist into one list
@@ -78,12 +77,9 @@ for g in range(0, 85):
     dtw_sim_ls.append(dtw_sim)
     dtw_sim_labels.append(files_ls[g][0])
 
-# sort array wrt to sim measure, very inefficient method, but just needed to get an overview of results
-dtw_sim_sorted = sorted(dtw_sim_labels_ls, key=lambda x: x[0])
-print(dtw_sim_sorted)
-file2 = open("DTW_ED.txt","w")
-file2.writelines(str(dtw_sim_sorted))
-file2.close()
+# end time for simulation
+end = time.time()
+print(end - start)
 
 # create dendrogram
 Z = linkage(np.reshape(dtw_sim_ls, (len(dtw_sim_ls), 1)), 'single')
@@ -91,6 +87,10 @@ plt.figure()
 dn = dendrogram(Z, labels=dtw_sim_labels)
 plt.savefig('./Dendrograms/DTW_dendro.png', format='png', bbox_inches='tight')
 
-# print time for simulation
-end = time.time()
-print(end - start)
+# sort array wrt to sim measure, very inefficient method, but just needed to get an overview of results
+dtw_sim_sorted = sorted(dtw_sim_labels_ls, key=lambda x: x[0])
+print(dtw_sim_sorted)
+file2 = open("DTW.txt","w")
+txt_time = "time taken for simulation " + str(end - start)
+file2.writelines(str(dtw_sim_sorted) + txt_time)
+file2.close()
