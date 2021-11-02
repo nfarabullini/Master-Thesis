@@ -43,7 +43,7 @@ def dtw_path(s, t):
             elif last_min == dtw_matrix[i, j - 1]:
                 dtw_path_ls.append([i, j - 1])
             dtw_matrix[i, j] = cost + last_min
-    dtw_path_ls = [[n - 1, m - 1]]
+    dtw_path_ls = [[0, 0]]
     i = n - 1
     j = m - 1
     while i > 0 and j > 0:
@@ -61,7 +61,7 @@ def dtw_path(s, t):
             else:
                 i = i - 1
                 j = j - 1
-        dtw_path_ls.append([i, j])
+        dtw_path_ls.append([n - i - 1, m - j - 1])
     return dtw_path_ls
 
 start = time.time()
