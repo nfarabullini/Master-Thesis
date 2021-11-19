@@ -26,7 +26,7 @@ def dtw_cosSim(s, t):
             t_squared_sum = 0
             sum_entries = 0
             # multi-dimensional case
-            for k in range(0, len(s[i - 1]) - 1):
+            for k in range(0, len(s[i - 1])):
                 if not (math.isnan((s[i - 1][k] * t[j - 1][k]))):
                     sum_entries += (s[i - 1][k] * t[j - 1][k])
                     s_squared_sum += pow(s[i - 1][k], 2)
@@ -84,12 +84,6 @@ for g in range(0, 85):
 
 # end time for simulation
 end = time.time()
-
-# create dendrogram
-Z = linkage(np.reshape(dtw_sim_ls, (len(dtw_sim_ls), 1)), 'single')
-plt.figure()
-dn = dendrogram(Z, labels=dtw_sim_labels)
-plt.savefig('./Dendrograms/DTW_cosSim_dendro.png', format='png', bbox_inches='tight')
 
 # sort array wrt to sim measure, very inefficient method, but just needed to get an overview of results
 dtw_sorted = sorted(dtw_sim_labels_ls, key=lambda x: x[0])

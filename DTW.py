@@ -81,12 +81,6 @@ for g in range(0, 85):
 end = time.time()
 print(end - start)
 
-# create dendrogram
-Z = linkage(np.reshape(dtw_sim_ls, (len(dtw_sim_ls), 1)), 'single')
-plt.figure()
-dn = dendrogram(Z, labels=dtw_sim_labels)
-plt.savefig('./Dendrograms/DTW_dendro.png', format='png', bbox_inches='tight')
-
 # sort array wrt to sim measure, very inefficient method, but just needed to get an overview of results
 dtw_sim_sorted = sorted(dtw_sim_labels_ls, key=lambda x: x[0])
 print(dtw_sim_sorted)

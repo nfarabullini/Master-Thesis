@@ -13,26 +13,30 @@ def normalize(list):
 
 
 def dist_fun(a, b):
-    return (a - b) ** 2
+    return pow(a - b, 2)
 
 def upper_envelope(series, sakoe_chiba):
 
     u_p = []
-    arr = []
-    for w in range(0, len(series) - 1):
+    for w in range(0, len(series)):
         index_1 = w - sakoe_chiba
         index_2 = w + sakoe_chiba
-        if index_1 >= 0 and index_2 <= len(series) - 1:
+        if index_1 >= 0 and index_2 <= len(series):
+            arr = []
             for c in range(index_1, index_2):
                 arr.append(series[c])
-            max_val = np.amax(arr)
-        elif index_1 < 0:
-            max_val = 0
-        u_p.append(max_val)
+            max_val = max(arr)
+            u_p.append(max_val)
+        elif index_1 >= sakoe_chiba:
+            arr = []
+            for c in range(index_1, len(series)):
+                arr.append(series[c])
+            max_val = max(arr)
+            u_p.append(max_val)
 
-    # fill initial values for which index_1 would be < 0
-    for w in range(0, sakoe_chiba - 1):
-        u_p[w] = u_p[sakoe_chiba]
+    # fill in tails of envelope
+    for w in range(0, sakoe_chiba):
+        u_p.insert(w, u_p[0])
     return u_p
 
 def upper_envelope_paa(series, N):
@@ -51,22 +55,27 @@ def upper_envelope_paa(series, N):
     return paa_env
 
 def lower_envelope(series, sakoe_chiba):
+
     l_p = []
-    arr = []
-    for w in range(0, len(series) - 1):
+    for w in range(0, len(series)):
         index_1 = w - sakoe_chiba
         index_2 = w + sakoe_chiba
-        if index_1 >= 0 and index_2 <= len(series) - 1:
+        if index_1 >= 0 and index_2 <= len(series):
+            arr = []
             for c in range(index_1, index_2):
                 arr.append(series[c])
-            min_val = np.amax(arr)
-        elif index_1 < 0:
-            min_val = 0
-        l_p.append(min_val)
+            max_val = min(arr)
+            l_p.append(max_val)
+        elif index_1 >= sakoe_chiba:
+            arr = []
+            for c in range(index_1, len(series)):
+                arr.append(series[c])
+            max_val = min(arr)
+            l_p.append(max_val)
 
-    # fill initial values for which index_1 would be < 0
-    for w in range(0, sakoe_chiba - 1):
-        l_p[w] = l_p[sakoe_chiba]
+    # fill in tails of envelope
+    for w in range(0, sakoe_chiba):
+        l_p.insert(w, l_p[0])
     return l_p
 
 def lower_envelope_paa(series, N):
@@ -87,7 +96,7 @@ def lower_envelope_paa(series, N):
 def calc_lb_paa(d_1, d_2, uo, lo, N):
     lb_cum = 0
     len_d = len(d_1)
-    for p in range(0, len_d - 1):
+    for p in range(len_d):
         d = 0
         if d_2[p] > uo[p]:
             d = dist_fun(d_2[p], uo[p])
@@ -95,6 +104,55 @@ def calc_lb_paa(d_1, d_2, uo, lo, N):
             d = dist_fun(d_1[p], lo[p])
         lb_cum += (len_d / N) * d
     return math.sqrt(lb_cum)
+
+def calc_min_dist(T_h, T_l, U, L, N):
+    lb_cum = 0
+    len_d = len(T_h)
+    for p in range(len_d):
+        d = 0
+        if T_l[p] > U[p]:
+            d = dist_fun(T_l[p], U[p])
+        elif T_h[p] < L[p]:
+            d = dist_fun(T_h[p], L[p])
+        lb_cum += (len_d / N) * d
+    return math.sqrt(lb_cum)
+
+def construct_lower_MBRs(series, N):
+    n = len(series) // N
+    entry = 0
+    ls_i = []
+    for i in range(1, N + 1):
+        range_entries = n*i
+        ls_j = []
+        for j in range(entry, range_entries):
+            ls_j.append(series[j])
+        ls_i.append(ls_j)
+        entry = range_entries
+    l_a = []
+    for w in range(0, len(ls_i)):
+        min_val = min(ls_i[w])
+        for z in range(len(ls_i[w])):
+            l_a.append(min_val)
+    return l_a
+
+def construct_upper_MBRs(series, N):
+    n = len(series) // N
+    entry = 0
+    ls_i = []
+    for i in range(1, N + 1):
+        range_entries = n*i
+        ls_j = []
+        for j in range(entry, range_entries):
+            ls_j.append(series[j])
+        ls_i.append(ls_j)
+        entry = range_entries
+    u_a = []
+    for w in range(0, len(ls_i)):
+        max_val = max(ls_i[w])
+        for z in range(len(ls_i[w])):
+            u_a.append(max_val)
+    return u_a
+
 
 #to change: edit code to avoid plagiarism
 def dtw(s, t):
@@ -114,15 +172,15 @@ def dtw(s, t):
 
     return dtw_matrix[n, m]
 
-m = 10
+m = 12
 Q = []
 T = []
 X = []
 for i in range(0, 2*m):
-    Q.append(random.randint(1, 2))
+    Q.append(random.randint(1, 20))
 
 for i in range(0, m):
-    T.append(random.randint(1, 2))
+    T.append(random.randint(1, 30))
     X.append(0)
 #Q = [1, 2, 3, 4, 5, 6, 7, 8]
 #T = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -140,6 +198,7 @@ cb = []
 sakoe_chiba = 2
 u = upper_envelope(Q, sakoe_chiba)
 l = lower_envelope(Q, sakoe_chiba)
+
 N = 3
 tz = []
 var_1 = 0
@@ -148,6 +207,13 @@ uo = upper_envelope_paa(u, N)
 lo = lower_envelope_paa(l, N)
 T_paa_l = lower_envelope_paa(T, N)
 T_paa_h = upper_envelope_paa(T, N)
+
+T_u_r = construct_upper_MBRs(T, 4)
+T_l_r = construct_lower_MBRs(T, 4)
+plot(T_u_r)
+plot(T_l_r)
+plot(T)
+lb1 = calc_min_dist(T_u_r, T_l_r, u, l, N)
 
 for i in range(0, 2 * m):
     t.append(0)
@@ -165,11 +231,11 @@ for l in range(0, len(T) - 1):
                 #index_of_best_match = i
 
 # plot series for visual comparison
-print(bsf)
-plot(T)
-plot(Q)
-grid(True)
-show()
+# print(bsf)
+# plot(T)
+# plot(Q)
+# grid(True)
+# show()
 
 
 

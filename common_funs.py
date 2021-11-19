@@ -1,6 +1,8 @@
 from metrics_msproject import compute_angle_vector
 import pandas as pd
 import os
+import math
+import numpy as np
 import json
 
 #count number of steps in a DTW path
@@ -26,11 +28,44 @@ def dtw_steps(dtw_matrix, n, m):
         dtw_path_ls.append([n - i - 1, m - j - 1])
     return len(dtw_path_ls)
 
+def dtw_horizontal(s, t):
+    n, m = len(s), len(t)
+    if n != m:
+        print("unequal")
+    comp_vals = 0
+    for i in range(n):
+        dtw_matrix = np.zeros((len(s.iloc[i]) + 1, len(t.iloc[i]) + 1))
+        for j in range(len(s.iloc[i]) + 1):
+            for k in range(len(t.iloc[i]) + 1):
+                dtw_matrix[j, k] = np.inf
+        dtw_matrix[0, 0] = 0
+        vec_vals = [0] * (len(t.iloc[i]) + 1)
+        for j in range(1, len(s.iloc[i]) + 1):
+            for k in range(1, len(t.iloc[i]) + 1):
+                # multi-dimensional case
+                count = 0
+                if not (math.isnan((s.iloc[i][j - 1] - t.iloc[i][k - 1]))):
+                    diff_entries = abs(s.iloc[i][j - 1] - t.iloc[i][k - 1])
+                    count += 1
+                if count > 0:
+                    cost = diff_entries
+                    # take last min from a square box
+                    last_min = np.min([dtw_matrix[j - 1, k], dtw_matrix[j, k - 1], dtw_matrix[j - 1, k - 1]])
+                    dtw_matrix[j, k] = cost + last_min
+                    vec_vals[k] = cost + last_min
+                else:
+                    dtw_matrix[j, k] = vec_vals[k]
+        # divide by length of DTW path, aka the number of steps
+        n_steps = dtw_steps(dtw_matrix, len(s.iloc[i]), len(t.iloc[i]))
+        dtw_final = dtw_matrix[len(s.iloc[i]), len(t.iloc[i])] / n_steps
+        comp_vals += dtw_final
+    return comp_vals
+
 # compute df for query
-def compute_df_query(path, files_ls):
+def compute_df_query(path, files_ls, index):
     newDF_AR = pd.DataFrame(index=range(29))
     i = 0
-    for data in files_ls[0]:
+    for data in files_ls[index]:
         f = open(os.path.join(path, data), 'r')
         data = json.load(f)
         bodyvector1 = compute_angle_vector(data)
@@ -45,9 +80,8 @@ def compute_df_query(path, files_ls):
 def compute_files_ls(path):
     n = 0
     m = 0
-    files_ls = [[] for i in range(0, 85)]
-
-    for file in sorted(os.listdir(path)):
+    files_ls = [[] for i in range(0, 52)]
+    for file in sorted(os.listdir(path))[1:]:
         file_name_new = str(file)
         if m == 0:
             files_ls[n].append(file)
@@ -55,7 +89,8 @@ def compute_files_ls(path):
             m = m + 1
         elif file_name_new[0] == file_name[0] and file_name_new[1] == file_name[1] and \
                 file_name_new[2] == file_name[2] and file_name_new[3] == file_name[3] and file_name_new[4] == file_name[4] \
-                and file_name_new[5] == file_name[5]:
+                and file_name_new[5] == file_name[5] and file_name_new[6] == file_name[6] and file_name_new[7] == file_name[7]\
+                and file_name_new[8] == file_name[8] and file_name_new[9] == file_name[9] and file_name_new[10] == file_name[10]:
             files_ls[n].append(file)
         else:
             n = n + 1
@@ -64,8 +99,10 @@ def compute_files_ls(path):
     return files_ls
 
 # compute file for query (AR, the first file in this case)
-def compute_query_ls(path):
+def compute_query_ls(path, index):
     files_AR = []
-    file = sorted(os.listdir(path))[0]
+    file = sorted(os.listdir(path))[index]
     files_AR.append(file)
     return files_AR
+
+
