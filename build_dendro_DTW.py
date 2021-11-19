@@ -80,6 +80,7 @@ for i in range(0, 52):
         continue
 
 dendro_arr_complete = dendro_arr_fill + dendro_arr_fill.T - np.diag(np.diag(dendro_arr_fill))
+dendro_arr_complete.to_csv("DTW_dendro_filtered_csv", encoding='utf-8', index=False)
 dists = squareform(dendro_arr_complete)
 Z = linkage(dists, 'average')
 plt.figure()
