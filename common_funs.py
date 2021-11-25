@@ -61,6 +61,43 @@ def dtw_horizontal(s, t):
         comp_vals += dtw_final
     return comp_vals
 
+def dtw_cosSim_horizontal(s, t):
+    n, m = len(s), len(t)
+    if n != m:
+        print("unequal")
+    comp_vals = 0
+    for i in range(n):
+        dtw_matrix = np.zeros((len(s.iloc[i]) + 1, len(t.iloc[i]) + 1))
+        for j in range(len(s.iloc[i]) + 1):
+            for k in range(len(t.iloc[i]) + 1):
+                dtw_matrix[j, k] = np.inf
+        dtw_matrix[0, 0] = 0
+        vec_vals = [0] * (len(t.iloc[i]) + 1)
+        for j in range(1, len(s.iloc[i]) + 1):
+            for k in range(1, len(t.iloc[i]) + 1):
+                # multi-dimensional case
+                count = 0
+                if not (math.isnan((s.iloc[i][j - 1] * t.iloc[i][k - 1]))):
+                    mult_entries = abs(s.iloc[i][j - 1] * t.iloc[i][k - 1])
+                    s_squared = pow(s.iloc[i][j - 1], 2)
+                    t_squared = pow(t.iloc[i][k - 1], 2)
+                    count += 1
+                if count > 0:
+                    cost = mult_entries / (math.sqrt(s_squared) * math.sqrt(t_squared))
+                    # adjust cost with subtracting 1
+                    cost = 1 - cost
+                    # take last min from a square box
+                    last_min = np.min([dtw_matrix[j - 1, k], dtw_matrix[j, k - 1], dtw_matrix[j - 1, k - 1]])
+                    dtw_matrix[j, k] = cost + last_min
+                    vec_vals[k] = cost + last_min
+                else:
+                    dtw_matrix[j, k] = vec_vals[k]
+        # divide by length of DTW path, aka the number of steps
+        n_steps = dtw_steps(dtw_matrix, len(s.iloc[i]), len(t.iloc[i]))
+        dtw_final = dtw_matrix[len(s.iloc[i]), len(t.iloc[i])] / n_steps
+        comp_vals += dtw_final
+    return comp_vals
+
 # compute df for query
 def compute_df_query(path, files_ls, index):
     newDF_AR = pd.DataFrame(index=range(29))

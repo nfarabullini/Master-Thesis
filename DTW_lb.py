@@ -1,147 +1,86 @@
-import math
-import random
+from common_funs import compute_df_query, compute_files_ls
+from lb_funs import calc_min_dist_MD, upper_envelope, lower_envelope, construct_lower_MBRs, construct_upper_MBRs
+
 import numpy as np
+import pandas as pd
+import os
+import json
+import warnings
+import time
+from scipy.cluster.hierarchy import dendrogram, linkage
+from scipy.spatial.distance import squareform
+from sklearn.cluster import AgglomerativeClustering
+import matplotlib.pyplot as plt
+warnings.filterwarnings('ignore')
+from metrics_msproject import compute_angle_vector
 
-def dist_fun(a, b):
-    return pow(a - b, 2)
+sakoe_chiba = 20
+N = 15
 
-def calc_min_dist(T_h, T_l, Q_U, Q_L, N):
-    lb_cum = 0
-    len_d = len(T_h)
-    for p in range(len_d):
-        d = 0
-        if T_l[p] > Q_U[p]:
-            d = dist_fun(T_l[p], Q_U[p])
-        if T_h[p] < Q_L[p]:
-            d = dist_fun(T_h[p], Q_L[p])
-        lb_cum += (len_d / N) * d
-    return math.sqrt(lb_cum)
+path = "./files_dances"
+# group files belonging to each video in a different sublist, combine all sublist into one list
+files_ls = compute_files_ls(path)
+dendro_arr_fill = np.zeros((52, 52))
+start = time.time()
+for index_query in range(0, 52):
+    # compute angle vectors for query video
+    newDF_query = compute_df_query(path, files_ls, index_query)
 
-def upper_envelope(series, sakoe_chiba):
+    u = upper_envelope(newDF_query, sakoe_chiba)
+    l = lower_envelope(newDF_query, sakoe_chiba)
 
-    u_p = []
-    for w in range(0, len(series)):
-        index_1 = w - sakoe_chiba
-        index_2 = w + sakoe_chiba
-        if index_1 >= 0 and index_2 <= len(series):
-            arr = []
-            for c in range(index_1, index_2):
-                arr.append(series[c])
-            max_val = max(arr)
-            u_p.append(max_val)
-        elif index_1 >= sakoe_chiba:
-            arr = []
-            for c in range(index_1, len(series)):
-                arr.append(series[c])
-            max_val = max(arr)
-            u_p.append(max_val)
+    Q_u_r = construct_upper_MBRs(u, N)
+    Q_l_r = construct_lower_MBRs(l, N)
 
-    # fill in tails of envelope
-    for w in range(0, sakoe_chiba):
-        u_p.insert(w, u_p[0])
-    return u_p
+    # loop over all other videos to be compared with query
+    for g in range(index_query + 1, 52):
+        i = 0
+        newDF = pd.DataFrame(index=range(29))
+        # compute angle vectors of each candidate video
+        for data in files_ls[g]:
+            f = open(os.path.join(path, data), 'r')
+            d = json.load(f)
+            bodyvector1 = compute_angle_vector(d)
+            new_bodyvector = pd.DataFrame(bodyvector1)
 
-def lower_envelope(series, sakoe_chiba):
+            newDF[i] = new_bodyvector
+            i += 1
+            f.close()
+        # compute DTW similarity
 
-    l_p = []
-    for w in range(0, len(series)):
-        index_1 = w - sakoe_chiba
-        index_2 = w + sakoe_chiba
-        if index_1 >= 0 and index_2 <= len(series):
-            arr = []
-            for c in range(index_1, index_2):
-                arr.append(series[c])
-            max_val = min(arr)
-            l_p.append(max_val)
-        elif index_1 >= sakoe_chiba:
-            arr = []
-            for c in range(index_1, len(series)):
-                arr.append(series[c])
-            max_val = min(arr)
-            l_p.append(max_val)
+        T_u_r = construct_upper_MBRs(newDF, N)
+        T_l_r = construct_lower_MBRs(newDF, N)
+        lb1 = calc_min_dist_MD(T_u_r, T_l_r, Q_u_r, Q_l_r, N)
+        dendro_arr_fill[index_query, g] = lb1
+        print(g)
+    print(index_query)
 
-    # fill in tails of envelope
-    for w in range(0, sakoe_chiba):
-        l_p.insert(w, l_p[0])
-    return l_p
+end = time.time()
+print(end - start)
 
-def construct_lower_MBRs(series, N):
-    n = len(series) // N
-    entry = 0
-    ls_i = []
-    for i in range(1, N + 1):
-        range_entries = n*i
-        ls_j = []
-        for j in range(entry, range_entries):
-            ls_j.append(series[j])
-        ls_i.append(ls_j)
-        entry = range_entries
-    l_a = []
-    for w in range(0, len(ls_i)):
-        min_val = min(ls_i[w])
-        for z in range(len(ls_i[w])):
-            l_a.append(min_val)
-    return l_a
+dendro_arr_complete = dendro_arr_fill + dendro_arr_fill.T - np.diag(np.diag(dendro_arr_fill))
+pd.DataFrame(dendro_arr_complete).to_csv("DTW_lb_sim_arr_filtered_csv")
+clustering = AgglomerativeClustering(n_clusters = 9, affinity = 'precomputed', linkage = 'average').fit(dendro_arr_complete)
+file1 = open("DTW_lb_sim_arr_filtered.txt","w")
+txt_time = "time taken for simulation " + str(end - start)
+file1.writelines(str(clustering.labels_) + txt_time)
+file1.close()
 
-def construct_upper_MBRs(series, N):
-    n = len(series) // N
-    entry = 0
-    ls_i = []
-    for i in range(1, N + 1):
-        range_entries = n*i
-        ls_j = []
-        for j in range(entry, range_entries):
-            ls_j.append(series[j])
-        ls_i.append(ls_j)
-        entry = range_entries
-    u_a = []
-    for w in range(0, len(ls_i)):
-        max_val = max(ls_i[w])
-        for z in range(len(ls_i[w])):
-            u_a.append(max_val)
-    return u_a
+# # create dendrogram
+files_names = []
+for i in range(0, 52):
+    cont = False
+    for j in range(len(files_ls[i][0])):
+        if cont:
+           continue
+        if files_ls[i][0][j] == "0":
+           files_names.append(files_ls[i][0][0:j])
+           cont = True
+    if cont:
+        continue
 
-def dtw(s, t):
-    n, m = len(s), len(t)
-    dtw_matrix = np.zeros((n + 1, m + 1))
-    for i in range(n + 1):
-        for j in range(m + 1):
-            dtw_matrix[i, j] = np.inf
-    dtw_matrix[0, 0] = 0
-
-    for i in range(1, n + 1):
-        for j in range(1, m + 1):
-            cost = abs(s[i - 1] - t[j - 1])
-            # take last min from a square box
-            last_min = np.min([dtw_matrix[i - 1, j], dtw_matrix[i, j - 1], dtw_matrix[i - 1, j - 1]])
-            dtw_matrix[i, j] = cost + last_min
-
-    return dtw_matrix[n, m]
-
-sakoe_chiba = 1
-N = 12
-
-m = 12
-Q = []
-T = []
-X = []
-for i in range(0, m):
-    Q.append(random.randint(1, 20))
-
-for i in range(0, m):
-    T.append(random.randint(1, 30))
-
-u = upper_envelope(Q, sakoe_chiba)
-l = lower_envelope(Q, sakoe_chiba)
-
-T_u_r = construct_upper_MBRs(T, N)
-T_l_r = construct_lower_MBRs(T, N)
-Q_u_r = construct_upper_MBRs(Q, N)
-Q_l_r = construct_lower_MBRs(Q, N)
-
-lb1 = calc_min_dist(T_u_r, T_l_r, Q_u_r, Q_l_r, N)
-dtw_d = dtw(T, Q)
-print(T)
-print(Q)
-print(lb1)
-print(dtw_d)
+dists = squareform(dendro_arr_complete)
+Z = linkage(dists, 'average')
+plt.figure()
+dn = dendrogram(Z, labels = files_names)
+plt.savefig('./Dendrograms/DTW_lb_dendro_filtered.png', format='png', bbox_inches='tight')

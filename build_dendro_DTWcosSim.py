@@ -40,7 +40,7 @@ def dtw_cosSim(s, t):
             if count > 0:
                 cost = sum_entries/(math.sqrt(s_squared_sum)*math.sqrt(t_squared_sum))
                 # adjust cost with subtracting 1
-                cost = 1 - round(cost, 5)
+                cost = 1 - cost
                 # take last min from a square box
                 last_min = np.min([dtw_matrix[i - 1, j], dtw_matrix[i, j - 1], dtw_matrix[i - 1, j - 1]])
                 dtw_matrix[i, j] = cost + last_min
@@ -99,6 +99,7 @@ end = time.time()
 print(end - start)
 
 dendro_arr_complete = dendro_arr_fill + dendro_arr_fill.T - np.diag(np.diag(dendro_arr_fill))
+pd.DataFrame(dendro_arr_complete).to_csv("DTW_cosSim_arr_filtered_csv")
 clustering = AgglomerativeClustering(n_clusters = 9, affinity = 'precomputed', linkage = 'average').fit(dendro_arr_complete)
 file1 = open("DTW_cosSim_arr_filtered.txt","w")
 txt_time = "time taken for simulation " + str(end - start)
@@ -120,7 +121,6 @@ for i in range(0, 52):
 
 #dendro_array = np.array(dendro_ls)
 #dists = squareform(dendro_array)
-dendro_arr_complete = dendro_arr_fill + dendro_arr_fill.T - np.diag(np.diag(dendro_arr_fill))
 dists = squareform(dendro_arr_complete)
 Z = linkage(dists, 'average')
 plt.figure()
