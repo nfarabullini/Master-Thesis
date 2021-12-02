@@ -16,6 +16,7 @@ from metrics_msproject import compute_angle_vector
 
 sakoe_chiba = 20
 N = 15
+th = 30
 
 path = "./files_dances"
 # group files belonging to each video in a different sublist, combine all sublist into one list
@@ -37,27 +38,16 @@ Q_l_r = construct_lower_MBRs(l, N)
 # loop over all other videos to be compared with query
 for g in range(0, 52):
     if g != index_query:
-        i = 0
-        newDF = pd.DataFrame(index=range(29))
-        # compute angle vectors of each candidate video
-        for data in files_ls[g]:
-            f = open(os.path.join(path, data), 'r')
-            d = json.load(f)
-            bodyvector1 = compute_angle_vector(d)
-            new_bodyvector = pd.DataFrame(bodyvector1)
-
-            newDF[i] = new_bodyvector
-            i += 1
-            f.close()
+        newDF = compute_df_query(path, files_ls, g)
 
         T_u_r = construct_upper_MBRs(newDF, N)
         T_l_r = construct_lower_MBRs(newDF, N)
 
         # compute LB Keough similarity
-        lb1 = calc_min_dist_MD_filtered(T_u_r, T_l_r, Q_u_r, Q_l_r, N)
+        lb1 = calc_min_dist_MD_filtered(T_u_r, T_l_r, Q_u_r, Q_l_r, N, th)
         dendro_arr_fill[index_query, g] = lb1
         # Maybe 50 instead of 30
-        if lb1 < 20:
+        if lb1 < th:
             ls_lb_files.append([g, newDF, lb1])
         print(g)
 #print(index_query)
