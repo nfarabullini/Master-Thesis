@@ -4,6 +4,7 @@ import os
 import math
 import numpy as np
 import json
+import statistics
 
 #count number of steps in a DTW path
 def dtw_steps(dtw_matrix, n, m):
@@ -100,7 +101,7 @@ def dtw_cosSim_horizontal(s, t):
 
 # compute df for query
 def compute_df_query(path, files_ls, index):
-    newDF_AR = pd.DataFrame(index=range(29))
+    newDF_AR = pd.DataFrame(index=range(10))
     i = 0
     for data in files_ls[index]:
         f = open(os.path.join(path, data), 'r')
@@ -142,4 +143,51 @@ def compute_query_ls(path, index):
     files_AR.append(file)
     return files_AR
 
+def vector_vertical(s, t):
+    n_cols, m_cols = len(s.columns), len(t.columns)
+    # vectors are of different lengths, take the shortest and loop over values for both videos for that range
+    min_cols = min(n_cols, m_cols)
+    sim_ls = []
+    n_frames = 6
+    # general case
+    for i in range(min_cols):
+        sim = 0
+        ls_vec_s = []
+        ls_vec_t = []
+        if i >= n_frames and i <= (min_cols - n_frames):
+            j = i - n_frames
+            l = i + n_frames
+            for k in range(j, l):
+                ls_vec_s.append(s[k])
+                ls_vec_t.append(t[k])
+            for h in range(len(ls_vec_s)):
+                for z in range(len(ls_vec_s[h])):
+                    if not (math.isnan(ls_vec_s[h][z] - ls_vec_t[h][z])):
+                        sim_tmp = abs(ls_vec_s[h][z] - ls_vec_t[h][z])
+                    sim += sim_tmp
+        # # corner case 1
+        # elif i < 6:
+        #     l = i + 6
+        #     for k in range(i, l):
+        #         ls_vec_s.append(s[k])
+        #         ls_vec_t.append(t[k])
+        #     for h in range(len(ls_vec_s)):
+        #         for z in range(len(ls_vec_s[h])):
+        #             if not (math.isnan(ls_vec_s[h][z] - ls_vec_t[h][z])):
+        #                 sim_tmp = abs(ls_vec_s[h][z] - ls_vec_t[h][z])
+        #             sim += sim_tmp
+        # # corner case 2
+        # elif i > (min_cols - 6):
+        #     j = i - 6
+        #     for k in range(j, i):
+        #         ls_vec_s.append(s[k])
+        #         ls_vec_t.append(t[k])
+        #     for h in range(len(ls_vec_s)):
+        #         for z in range(len(ls_vec_s[h])):
+        #             if not (math.isnan(ls_vec_s[h][z] - ls_vec_t[h][z])):
+        #                 sim_tmp = abs(ls_vec_s[h][z] - ls_vec_t[h][z])
+        #             sim += sim_tmp
+        sim_ls.append(sim)
+    sim_final = sum(sim_ls)/min_cols
+    return sim_final
 
