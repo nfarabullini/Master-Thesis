@@ -101,7 +101,7 @@ def dtw_cosSim_horizontal(s, t):
 
 # compute df for query
 def compute_df_query(path, files_ls, index):
-    newDF_AR = pd.DataFrame(index=range(10))
+    newDF_AR = pd.DataFrame(index=range(29))
     i = 0
     for data in files_ls[index]:
         f = open(os.path.join(path, data), 'r')
@@ -143,12 +143,11 @@ def compute_query_ls(path, index):
     files_AR.append(file)
     return files_AR
 
-def vector_vertical(s, t):
+def vector_vertical(s, t, n_frames):
     n_cols, m_cols = len(s.columns), len(t.columns)
     # vectors are of different lengths, take the shortest and loop over values for both videos for that range
     min_cols = min(n_cols, m_cols)
     sim_ls = []
-    n_frames = 6
     # general case
     for i in range(min_cols):
         sim = 0
