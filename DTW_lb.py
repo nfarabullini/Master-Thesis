@@ -28,6 +28,18 @@ highest_n_matches = 0
 sc_N_comb = []
 for sakoe_chiba in range(1, 21):
     for N in range(1, 21):
+        files_ls = compute_files_ls(path)
+        ground_truth = [
+            ['BS_F_BK_', 'BS_F_LT_', 'BS_F_RT_', 'BS_S_BK_', 'BS_S_FT_', 'BS_S_LT_', 'BS_S_RT_', 'SS_F_BK_', 'SS_F_FT_',
+             'SS_F_LT_', 'SS_F_RT_', 'SS_S_BK_', 'SS_S_LT_', 'SS_S_RT_', 'SYN_R_', 'SYN_U_'],
+            ['LD_F_dis_', 'LD_F_small_', 'LD_S_dis_', 'LD_S_small_', 'LU_F_dis_', 'LU_S_dis_'],
+            ['BJ_FT_', 'SJ_FT_'],
+            ['AR_', 'TA_', 'LU_F_big_', 'LU_S_big_'],
+            ['BJ_RT_', 'SJ_RT_', 'BJ_LT_', 'SJ_LT_'],
+            ['BBS_F_BK_', 'BBS_F_FT_', 'BBS_S_BK_', 'BBS_S_FT_', 'BSS_S_BK_', 'BSS_S_FT_'],
+            ['TB_F_FB_', 'TB_S_', 'TB_S_FB_', 'TF_F_', 'TF_S_', 'TL_F_', 'TL_S_', 'TOS_F_', 'TOS_S_', 'TR_F_', 'TR_S_'],
+            ['SYN_K_'],
+            ['BJ_BK_', 'SJ_BK_']]
         # group files belonging to each video in a different sublist, combine all sublist into one list
         dendro_arr_fill = np.zeros((52, 52))
         start = time.time()
