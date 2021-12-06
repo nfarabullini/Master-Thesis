@@ -166,3 +166,41 @@ def dtw(s, t):
             dtw_matrix[i, j] = cost + last_min
 
     return dtw_matrix[n, m]
+
+def FindMaxLength(lst):
+    maxList = max(lst, key=len)
+    return maxList
+
+def match_clustering_groups(ground_truth, files_names, clustering_labels):
+    match = 0
+    ls_1 = files_names
+    ls_2 = clustering_labels.tolist()
+    d_candidate = {'names': ls_1, 'groups': ls_2}
+    df_candidate = pd.DataFrame(d_candidate)
+    df_c_sorted = df_candidate.sort_values(by=['groups'])
+
+    count = 0
+    clustering_groups_sublists = [[] for i in range(0, 9)]
+    for i in range(len(df_c_sorted)):
+        if i == 0:
+            clustering_groups_sublists[count].append(df_c_sorted.names.iloc[0])
+        elif df_c_sorted.groups.iloc[i] == df_c_sorted.groups.iloc[i - 1]:
+            clustering_groups_sublists[count].append(df_c_sorted.names.iloc[i])
+        else:
+            count = count + 1
+            clustering_groups_sublists[count].append(df_c_sorted.names.iloc[i])
+    while len(ground_truth) > 0:
+        maxList = FindMaxLength(clustering_groups_sublists)
+        # find best match between candidate and ground truth
+        n_match = 0
+        best_entry = 0
+        for j in range(len(ground_truth)):
+            best_match_i = sum(el in ground_truth[j] for el in maxList)
+            if best_match_i > n_match:
+                n_match = best_match_i
+                best_entry = j
+        match += n_match
+        ground_truth.pop(best_entry)
+        ind = clustering_groups_sublists.index(maxList)
+        clustering_groups_sublists.pop(ind)
+    return match
