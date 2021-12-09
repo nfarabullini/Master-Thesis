@@ -70,22 +70,28 @@ def dtw_cosSim_horizontal(s, t):
                 dtw_matrix[j, k] = np.inf
         dtw_matrix[0, 0] = 0
         vec_vals = [0] * (len(t.iloc[i]) + 1)
+        #compute magnitude for set of first angle vectors
+        s_squared = []
+        for k in range(1, len(t.iloc[i]) + 1):
+            s_squared_j = 0
+            for j in range(1, len(s.iloc[i]) + 1):
+                if not (math.isnan((s.iloc[i][j - 1] * t.iloc[i][k - 1]))):
+                    s_squared_j += pow(s.iloc[i][j - 1], 2)
+            s_squared.append(s_squared_j)
         for j in range(1, len(s.iloc[i]) + 1):
-            # compute vectors magnitude
-            s_squared = 0
+            # compute magnitude of second angle vector
             t_squared = 0
             for k in range(1, len(t.iloc[i]) + 1):
                 if not (math.isnan((s.iloc[i][j - 1] * t.iloc[i][k - 1]))):
-                    s_squared += pow(s.iloc[i][j - 1], 2)
                     t_squared += pow(t.iloc[i][k - 1], 2)
             for k in range(1, len(t.iloc[i]) + 1):
                 # multi-dimensional case
                 count = 0
-                if not (math.isnan((s.iloc[i][j - 1] * t.iloc[i][k - 1]))):
-                    mult_entries = abs(s.iloc[i][j - 1] * t.iloc[i][k - 1])
+                if not (math.isnan(s.iloc[i][j - 1] * t.iloc[i][k - 1])):
+                    mult_entries = s.iloc[i][j - 1] * t.iloc[i][k - 1]
                     count += 1
                 if count > 0:
-                    cost = mult_entries / (math.sqrt(s_squared) * math.sqrt(t_squared))
+                    cost = mult_entries / (math.sqrt(s_squared[k - 1]) * math.sqrt(t_squared))
                     # adjust cost with subtracting 1
                     cost = 1 - cost
                     # take last min from a square box

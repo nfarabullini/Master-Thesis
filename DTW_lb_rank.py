@@ -20,7 +20,6 @@ for sakoe_chiba in range(1, 21):
         start = time.time()
         # group files belonging to each video in a different sublist, combine all sublist into one list
         files_ls = compute_files_ls(path)
-        #dendro_arr_fill = np.zeros((52, 52))
         ls_lb_files = []
 
         # compute angle vectors for query video
@@ -42,12 +41,9 @@ for sakoe_chiba in range(1, 21):
 
                 # compute LB Keough similarity
                 lb1 = calc_min_dist_MD_filtered(T_u_r, T_l_r, Q_u_r, Q_l_r, N, th)
-                #dendro_arr_fill[index_query, g] = lb1
-                # Maybe 50 instead of 30
                 if lb1 < th:
                     ls_lb_files.append([g, newDF, lb1])
                 print(g)
-        #print(index_query)
 
         # Calculate accurate DTW
         actual_dtw_ls = []
