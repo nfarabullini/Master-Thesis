@@ -31,8 +31,6 @@ def dtw_steps(dtw_matrix, n, m):
 
 def dtw_horizontal(s, t):
     n, m = len(s), len(t)
-    if n != m:
-        print("unequal")
     comp_vals = 0
     for i in range(n):
         dtw_matrix = np.zeros((len(s.iloc[i]) + 1, len(t.iloc[i]) + 1))
@@ -64,8 +62,6 @@ def dtw_horizontal(s, t):
 
 def dtw_cosSim_horizontal(s, t):
     n, m = len(s), len(t)
-    if n != m:
-        print("unequal")
     comp_vals = 0
     for i in range(n):
         dtw_matrix = np.zeros((len(s.iloc[i]) + 1, len(t.iloc[i]) + 1))
@@ -75,13 +71,18 @@ def dtw_cosSim_horizontal(s, t):
         dtw_matrix[0, 0] = 0
         vec_vals = [0] * (len(t.iloc[i]) + 1)
         for j in range(1, len(s.iloc[i]) + 1):
+            # compute vectors magnitude
+            s_squared = 0
+            t_squared = 0
+            for k in range(1, len(t.iloc[i]) + 1):
+                if not (math.isnan((s.iloc[i][j - 1] * t.iloc[i][k - 1]))):
+                    s_squared += pow(s.iloc[i][j - 1], 2)
+                    t_squared += pow(t.iloc[i][k - 1], 2)
             for k in range(1, len(t.iloc[i]) + 1):
                 # multi-dimensional case
                 count = 0
                 if not (math.isnan((s.iloc[i][j - 1] * t.iloc[i][k - 1]))):
                     mult_entries = abs(s.iloc[i][j - 1] * t.iloc[i][k - 1])
-                    s_squared = pow(s.iloc[i][j - 1], 2)
-                    t_squared = pow(t.iloc[i][k - 1], 2)
                     count += 1
                 if count > 0:
                     cost = mult_entries / (math.sqrt(s_squared) * math.sqrt(t_squared))
