@@ -13,8 +13,8 @@ path = "./files_dances"
 files_ls = compute_files_ls(path)
 highest_n_matches = 0
 sc_N_comb = []
-for sakoe_chiba in range(1, 21):
-    for N in range(1, 21):
+for sakoe_chiba in range(15, 21):
+    for N in range(10, 21):
         files_ls = compute_files_ls(path)
         ground_truth = [
             ['BS_F_BK_', 'BS_F_LT_', 'BS_F_RT_', 'BS_S_BK_', 'BS_S_FT_', 'BS_S_LT_', 'BS_S_RT_', 'SS_F_BK_', 'SS_F_FT_',
@@ -94,5 +94,5 @@ for sakoe_chiba in range(1, 21):
 
 print(sc_N_comb)
 file1 = open("DTW_lb_sc_N_combination.txt","w")
-file1.writelines(str(sc_N_comb))
+file1.writelines(str(sc_N_comb) + "Total time taken: " + str(tot_time_current))
 file1.close()
