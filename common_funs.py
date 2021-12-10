@@ -92,6 +92,7 @@ def dtw_ed(s, t):
     n_steps = dtw_steps(dtw_matrix, n, m)
     dtw_final = dtw_matrix[n, m]/n_steps
     return dtw_final
+
 def dtw_cosSim_horizontal(s, t):
     n, m = len(s), len(t)
     comp_vals = 0
