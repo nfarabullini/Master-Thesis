@@ -6,7 +6,7 @@ import time
 warnings.filterwarnings('ignore')
 # initial values to be set by the user
 index_query = 5
-th = 30
+th = 200
 
 path = "./files_dances"
 
@@ -27,9 +27,8 @@ for g in range(0, 52):
             actual_dtw_ls.append([g, actual_dtw])
         print(g)
 
-print(actual_dtw_ls)
 end = time.time()
 tot_time = end - start
-print(tot_time)
+print(actual_dtw_ls, tot_time)
 
 
