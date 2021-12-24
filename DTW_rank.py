@@ -23,7 +23,7 @@ for g in range(0, 52):
     if g != index_query:
         newDF = compute_df_query(path, files_ls, g)
         actual_dtw = dtw_horizontal(newDF, newDF_query)
-        if actual_dtw < th:
+        if actual_dtw <= th:
             actual_dtw_ls.append([g, actual_dtw])
         print(g)
 
