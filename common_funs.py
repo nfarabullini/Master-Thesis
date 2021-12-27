@@ -135,7 +135,8 @@ def dtw_cosSim_horizontal(s, t):
                     dtw_matrix[j, k] = vec_vals[k]
         # divide by length of DTW path, aka the number of steps
         n_steps = dtw_steps(dtw_matrix, len(s.iloc[i]), len(t.iloc[i]))
-        dtw_final = dtw_matrix[len(s.iloc[i]), len(t.iloc[i])] / n_steps
+        #dtw_final = dtw_matrix[len(s.iloc[i]), len(t.iloc[i])] / n_steps
+        dtw_final = dtw_matrix[len(s.iloc[i]), len(t.iloc[i])]
         comp_vals += dtw_final
     return comp_vals
 

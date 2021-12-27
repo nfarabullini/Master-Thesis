@@ -7,7 +7,7 @@ import time
 
 warnings.filterwarnings('ignore')
 # initial values to be set by the user
-th = 30
+th = 200
 index_query = 5
 
 # start up values for computation
@@ -41,7 +41,7 @@ for sakoe_chiba in range(1, 21):
 
                 # compute LB Keough similarity
                 lb1 = calc_min_dist_MD_filtered(T_u_r, T_l_r, Q_u_r, Q_l_r, N, th)
-                if lb1 < th:
+                if lb1 <= th:
                     ls_lb_files.append([g, newDF, lb1])
                 print(g)
 
@@ -50,7 +50,7 @@ for sakoe_chiba in range(1, 21):
         for i in range(len(ls_lb_files)):
             newDF = ls_lb_files[i][1]
             actual_dtw = dtw_horizontal(newDF, newDF_query)
-            if actual_dtw < th:
+            if actual_dtw <= th:
                 actual_dtw_ls.append([ls_lb_files[i][0], actual_dtw])
             print(i)
 
