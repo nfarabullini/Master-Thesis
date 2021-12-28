@@ -8,7 +8,7 @@ import math
 
 warnings.filterwarnings('ignore')
 # initial values to be set by the user
-th = 200
+th = 30
 index_query = 5
 
 # start up values for computation
@@ -39,7 +39,7 @@ for g in range(0, 52):
 
         # compute LB Keough similarity
         lb1 = math.floor(calc_min_dist_MD_filtered(T_u_r, T_l_r, Q_u_r, Q_l_r, 17, th))
-        if lb1 <= th:
+        if lb1 <= th*17:
             ls_lb_files.append([g, newDF, lb1])
         print(g)
 
@@ -58,7 +58,7 @@ for i in range(len(ls_lb_files)):
     T_l_r = construct_lower_MBRs(newDF, 15)
 
     actual_lb = calc_min_dist_MD_filtered(T_u_r, T_l_r, Q_u_r, Q_l_r, 15, th)
-    if actual_lb <= th:
+    if actual_lb <= th*15:
         actual_lb_ls.append([ls_lb_files[i][0], actual_lb])
     print(i)
 

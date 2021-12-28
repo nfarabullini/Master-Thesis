@@ -7,7 +7,7 @@ import time
 
 warnings.filterwarnings('ignore')
 # initial values to be set by the user
-th = 200
+th = 30
 index_query = 5
 
 # start up values for computation
@@ -41,7 +41,7 @@ for sakoe_chiba in range(1, 21):
 
                 # compute LB Keough similarity
                 lb1 = calc_min_dist_MD_filtered(T_u_r, T_l_r, Q_u_r, Q_l_r, N, th)
-                if lb1 <= th:
+                if lb1 <= th*N:
                     ls_lb_files.append([g, newDF, lb1])
                 print(g)
 
@@ -61,6 +61,7 @@ for sakoe_chiba in range(1, 21):
             sc_N_comb = [sakoe_chiba, N]
 
 print(sc_N_comb, tot_time_current)
+print(actual_dtw_ls)
 # #Display LB Keough ranking
 # ls_lb_sorted = sorted(ls_lb_files, key=lambda x: x[2])
 # for i in range(len(ls_lb_sorted)):
