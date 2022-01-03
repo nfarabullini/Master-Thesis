@@ -46,7 +46,7 @@ for index_query in range(0, 52):
             i += 1
             f.close()
         # compute DTW similarity
-        dtw_sim = dtw_ed(newDF, newDF_query)
+        dtw_sim = dtw_horizontal(newDF, newDF_query)
         #dtw_sim_labels_ls.append([dtw_sim, files_ls[g][0]])
         #dtw_sim_ls.append(dtw_sim)
         #dtw_sim_labels.append(files_ls[g])
