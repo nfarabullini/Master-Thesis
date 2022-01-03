@@ -1,4 +1,4 @@
-from common_funs import compute_df_query, compute_files_ls, dtw_horizontal
+from common_funs import compute_df_query, compute_files_ls, dtw_horizontal, dtw_ed
 
 import numpy as np
 import pandas as pd
@@ -46,7 +46,7 @@ for index_query in range(0, 52):
             i += 1
             f.close()
         # compute DTW similarity
-        dtw_sim = dtw_horizontal(newDF, newDF_query)
+        dtw_sim = dtw_ed(newDF, newDF_query)
         #dtw_sim_labels_ls.append([dtw_sim, files_ls[g][0]])
         #dtw_sim_ls.append(dtw_sim)
         #dtw_sim_labels.append(files_ls[g])
@@ -60,9 +60,9 @@ end = time.time()
 print(end - start)
 
 dendro_arr_complete = dendro_arr_fill + dendro_arr_fill.T - np.diag(np.diag(dendro_arr_fill))
-pd.DataFrame(dendro_arr_complete).to_csv("DTW_sim_arr_filtered_csv")
+pd.DataFrame(dendro_arr_complete).to_csv("DTW_sim_arr_vertical_filtered_csv")
 clustering = AgglomerativeClustering(n_clusters = 9, affinity = 'precomputed', linkage = 'average').fit(dendro_arr_complete)
-file1 = open("DTW_sim_arr_filtered.txt","w")
+file1 = open("DTW_sim_arr_vertical_filtered.txt","w")
 txt_time = "time taken for simulation " + str(end - start)
 file1.writelines(str(clustering.labels_) + txt_time)
 file1.close()
@@ -86,7 +86,7 @@ dists = squareform(dendro_arr_complete)
 Z = linkage(dists, 'average')
 plt.figure()
 dn = dendrogram(Z, labels = files_names)
-plt.savefig('./Dendrograms/DTW_dendro_filtered.png', format='png', bbox_inches='tight')
+plt.savefig('./Dendrograms/DTW_dendro_vertical_filtered.png', format='png', bbox_inches='tight')
 
 # clustering = AgglomerativeClustering(n_clusters = 20, affinity = 'precomputed', linkage = 'average').fit(dendro_arr_complete)
 # cluster_ls = []
