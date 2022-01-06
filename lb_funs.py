@@ -33,9 +33,9 @@ def calc_min_dist_filtered(T_h, T_l, Q_U, Q_L, N, th):
             d = dist_fun(T_l[p], Q_U[p])
         if T_h[p] < Q_L[p]:
             d = dist_fun(T_h[p], Q_L[p])
+        lb_cum += (len_d / N) * d
         if lb_cum > th_2:
             return lb_cum
-        lb_cum += (len_d / N) * d
     return math.sqrt(lb_cum)
 
 def calc_min_dist_MD_filtered(T_h, T_l, Q_U, Q_L, N, th):
