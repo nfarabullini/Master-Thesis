@@ -13,10 +13,11 @@ index_query = 5
 # start up values for computation
 tot_time_current = np.inf
 sc_N_comb = []
+ls_time = []
 
 path = "./files_dances"
-for sakoe_chiba in range(1, 21):
-    for N in range(1, 21):
+for sakoe_chiba in range(1, 22):
+    for N in range(1, 22):
         start = time.time()
         # group files belonging to each video in a different sublist, combine all sublist into one list
         files_ls = compute_files_ls(path)
@@ -56,12 +57,18 @@ for sakoe_chiba in range(1, 21):
 
         end = time.time()
         tot_time = end - start
-        if tot_time < tot_time_current:
-            tot_time_current = tot_time
-            sc_N_comb = [sakoe_chiba, N]
+        ls_time.append([[sakoe_chiba, N], tot_time])
+        # if tot_time < tot_time_current:
+        #     tot_time_current = tot_time
+        #     sc_N_comb = [sakoe_chiba, N]
 
-print(sc_N_comb, tot_time_current)
-print(actual_dtw_ls)
+file3 = open("DTW_lb_times.txt", "w")
+file3.writelines(str(ls_time))
+file3.close()
+
+# print(sc_N_comb, tot_time_current)
+# print(actual_dtw_ls)
+
 # #Display LB Keough ranking
 # ls_lb_sorted = sorted(ls_lb_files, key=lambda x: x[2])
 # for i in range(len(ls_lb_sorted)):
