@@ -16,8 +16,8 @@ sc_N_comb = []
 ls_time = []
 
 path = "./files_dances"
-for sakoe_chiba in range(1, 22):
-    for N in range(1, 22):
+for sakoe_chiba in range(1, 21):
+    for N in range(1, 21):
         start = time.time()
         # group files belonging to each video in a different sublist, combine all sublist into one list
         files_ls = compute_files_ls(path)
