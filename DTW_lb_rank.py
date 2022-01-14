@@ -41,7 +41,7 @@ for sakoe_chiba in range(1, 21):
                 T_l_r = construct_lower_MBRs(newDF, N)
 
                 # compute LB Keough similarity
-                lb1 = calc_min_dist_MD(T_u_r, T_l_r, Q_u_r, Q_l_r, N, th)
+                lb1 = calc_min_dist_MD(T_u_r, T_l_r, Q_u_r, Q_l_r, N)
                 if lb1 <= th:
                     ls_lb_files.append([g, newDF, lb1])
                 print(g)
