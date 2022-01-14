@@ -11,26 +11,23 @@ warnings.filterwarnings('ignore')
 
 path = "./files_dances"
 files_ls = compute_files_ls(path)
+files_ls = files_ls[0:15]
 highest_n_matches = 0
 sc_N_comb = []
-for sakoe_chiba in range(1, 22):
-    for N in range(1, 22):
+for sakoe_chiba in range(1, 31):
+    for N in range(1, 31):
         files_ls = compute_files_ls(path)
+        files_ls = files_ls[0:15]
         ground_truth = [
-            ['BS_F_BK_', 'BS_F_LT_', 'BS_F_RT_', 'BS_S_BK_', 'BS_S_FT_', 'BS_S_LT_', 'BS_S_RT_', 'SS_F_BK_', 'SS_F_FT_',
-             'SS_F_LT_', 'SS_F_RT_', 'SS_S_BK_', 'SS_S_LT_', 'SS_S_RT_', 'SYN_R_', 'SYN_U_'],
-            ['LD_F_dis_', 'LD_F_small_', 'LD_S_dis_', 'LD_S_small_', 'LU_F_dis_', 'LU_S_dis_'],
-            ['BJ_FT_', 'SJ_FT_'],
-            ['AR_', 'TA_', 'LU_F_big_', 'LU_S_big_'],
-            ['BJ_RT_', 'SJ_RT_', 'BJ_LT_', 'SJ_LT_'],
-            ['BBS_F_BK_', 'BBS_F_FT_', 'BBS_S_BK_', 'BBS_S_FT_', 'BSS_S_BK_', 'BSS_S_FT_'],
-            ['TB_F_FB_', 'TB_S_', 'TB_S_FB_', 'TF_F_', 'TF_S_', 'TL_F_', 'TL_S_', 'TOS_F_', 'TOS_S_', 'TR_F_', 'TR_S_'],
-            ['SYN_K_'],
-            ['BJ_BK_', 'SJ_BK_']]
+            ['AR_'],
+            ['BBS_F_BK_', 'BBS_F_FT_', 'BBS_S_BK_', 'BBS_S_FT_', 'BSS_S_BK_', 'BSS_S_FT_', 'BS_F_BK_', 'BS_F_LT_', 'BS_F_RT_', 'BS_S_BK_'],
+            ['BJ_BK_', 'BJ_FT_'],
+            ['BJ_LT_', 'BJ_RT_']
+        ]
         # group files belonging to each video in a different sublist, combine all sublist into one list
-        dendro_arr_fill = np.zeros((52, 52))
+        dendro_arr_fill = np.zeros((15, 15))
         start = time.time()
-        for index_query in range(0, 52):
+        for index_query in range(0, 15):
             # compute angle vectors for query video
             newDF_query = compute_df_query(path, files_ls, index_query)
 
@@ -41,7 +38,7 @@ for sakoe_chiba in range(1, 22):
             Q_l_r = construct_lower_MBRs(l, N)
 
             # loop over all other videos to be compared with query
-            for g in range(index_query + 1, 52):
+            for g in range(index_query + 1, 15):
                 newDF = compute_df_query(path, files_ls, g)
                 # compute DTW similarity
 
@@ -54,7 +51,7 @@ for sakoe_chiba in range(1, 22):
 
         dendro_arr_complete = dendro_arr_fill + dendro_arr_fill.T - np.diag(np.diag(dendro_arr_fill))
         # pd.DataFrame(dendro_arr_complete).to_csv("DTW_lb_sim_arr_cut_filtered_csv")
-        clustering = AgglomerativeClustering(n_clusters = 9, affinity = 'precomputed', linkage = 'average').fit(dendro_arr_complete)
+        clustering = AgglomerativeClustering(n_clusters = 4, affinity = 'precomputed', linkage = 'average').fit(dendro_arr_complete)
         # file1 = open("DTW_lb_sim_arr_cut_filtered.txt","w")
         # txt_time = "time taken for simulation " + str(end - start)
         # file1.writelines(str(clustering.labels_) + txt_time)
@@ -64,7 +61,7 @@ for sakoe_chiba in range(1, 22):
 
         # create dendrogram
         files_names = []
-        for i in range(0, 52):
+        for i in range(0, 15):
             cont = False
             for j in range(len(files_ls[i][0])):
                 if cont:
@@ -93,6 +90,6 @@ for sakoe_chiba in range(1, 22):
             tot_time_current = tot_time
 
 print(sc_N_comb)
-file1 = open("DTW_lb_sc_N_combination.txt","w")
-file1.writelines(str(sc_N_comb) + "Total time taken: " + str(tot_time_current))
-file1.close()
+# file1 = open("DTW_lb_sc_N_combination.txt","w")
+# file1.writelines(str(sc_N_comb) + "Total time taken: " + str(tot_time_current))
+# file1.close()

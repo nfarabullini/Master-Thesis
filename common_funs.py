@@ -203,7 +203,6 @@ def compute_files_ls(path):
         file_name_new = str(file)
         if m == 0:
             files_ls[n].append(file)
-            #files_AR.append(file)
             m = m + 1
         elif file_name_new[0] == file_name[0] and file_name_new[1] == file_name[1] and \
                 file_name_new[2] == file_name[2] and file_name_new[3] == file_name[3] and file_name_new[4] == file_name[4] \
