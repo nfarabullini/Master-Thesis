@@ -1,5 +1,5 @@
 from common_funs import compute_df_query, compute_files_ls, dtw_horizontal
-from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, construct_upper_MBRs
+from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_MD, construct_upper_MBRs
 
 import numpy as np
 import warnings
@@ -41,7 +41,7 @@ for sakoe_chiba in range(1, 21):
                 T_l_r = construct_lower_MBRs(newDF, N)
 
                 # compute LB Keough similarity
-                lb1 = calc_min_dist_MD_filtered(T_u_r, T_l_r, Q_u_r, Q_l_r, N, th)
+                lb1 = calc_min_dist_MD(T_u_r, T_l_r, Q_u_r, Q_l_r, N, th)
                 if lb1 <= th:
                     ls_lb_files.append([g, newDF, lb1])
                 print(g)
