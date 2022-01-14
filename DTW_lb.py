@@ -82,7 +82,7 @@ for sakoe_chiba in range(1, 22):
         # plt.savefig('./Dendrograms/DTW_lb_dendro_cut_filtered.png', format='png', bbox_inches='tight')
 
         # compare clustering groups with ground truth
-        number_matches = match_clustering_groups(ground_truth, files_names, clustering.labels_)
+        number_matches = match_clustering_groups(ground_truth, files_names, clustering.labels_, n_clusters)
         if number_matches > highest_n_matches:
             highest_n_matches = number_matches
             sc_N_comb = [sakoe_chiba, N, number_matches, tot_time]

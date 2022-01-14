@@ -171,7 +171,7 @@ def FindMaxLength(lst):
     maxList = max(lst, key=len)
     return maxList
 
-def match_clustering_groups(ground_truth, files_names, clustering_labels):
+def match_clustering_groups(ground_truth, files_names, clustering_labels, n_clusters):
     match = 0
     ls_1 = files_names
     ls_2 = clustering_labels.tolist()
@@ -180,7 +180,7 @@ def match_clustering_groups(ground_truth, files_names, clustering_labels):
     df_c_sorted = df_candidate.sort_values(by=['groups'])
 
     count = 0
-    clustering_groups_sublists = [[] for i in range(0, 4)]
+    clustering_groups_sublists = [[] for i in range(0, n_clusters)]
     for i in range(len(df_c_sorted)):
         if i == 0:
             clustering_groups_sublists[count].append(df_c_sorted.names.iloc[0])

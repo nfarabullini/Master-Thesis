@@ -11,23 +11,27 @@ warnings.filterwarnings('ignore')
 
 path = "./files_dances"
 files_ls = compute_files_ls(path)
-files_ls = files_ls[0:15]
+n_videos = 22
+n_clusters = 5
+files_ls = files_ls[0:n_videos]
 highest_n_matches = 0
 sc_N_comb = []
 for sakoe_chiba in range(1, 31):
     for N in range(1, 31):
         files_ls = compute_files_ls(path)
-        files_ls = files_ls[0:15]
+        files_ls = files_ls[0:n_videos]
         ground_truth = [
             ['AR_'],
-            ['BBS_F_BK_', 'BBS_F_FT_', 'BBS_S_BK_', 'BBS_S_FT_', 'BSS_S_BK_', 'BSS_S_FT_', 'BS_F_BK_', 'BS_F_LT_', 'BS_F_RT_', 'BS_S_BK_'],
+            ['BBS_F_BK_', 'BBS_F_FT_', 'BBS_S_BK_', 'BBS_S_FT_', 'BSS_S_BK_', 'BSS_S_FT_', 'BS_F_BK_', 'BS_F_LT_',
+             'BS_F_RT_', 'BS_S_BK_', 'BS_S_FT_', 'BS_S_LT_', 'BS_S_RT_'],
             ['BJ_BK_', 'BJ_FT_'],
-            ['BJ_LT_', 'BJ_RT_']
+            ['BJ_LT_', 'BJ_RT_'],
+            ['LD_F_dis_', 'LD_F_small_', 'LD_S_dis_', 'LD_S_small_']
         ]
         # group files belonging to each video in a different sublist, combine all sublist into one list
-        dendro_arr_fill = np.zeros((15, 15))
+        dendro_arr_fill = np.zeros((n_videos, n_videos))
         start = time.time()
-        for index_query in range(0, 15):
+        for index_query in range(0, n_videos):
             # compute angle vectors for query video
             newDF_query = compute_df_query(path, files_ls, index_query)
 
@@ -38,7 +42,7 @@ for sakoe_chiba in range(1, 31):
             Q_l_r = construct_lower_MBRs(l, N)
 
             # loop over all other videos to be compared with query
-            for g in range(index_query + 1, 15):
+            for g in range(index_query + 1, n_videos):
                 newDF = compute_df_query(path, files_ls, g)
                 # compute DTW similarity
 
@@ -51,7 +55,7 @@ for sakoe_chiba in range(1, 31):
 
         dendro_arr_complete = dendro_arr_fill + dendro_arr_fill.T - np.diag(np.diag(dendro_arr_fill))
         # pd.DataFrame(dendro_arr_complete).to_csv("DTW_lb_sim_arr_cut_filtered_csv")
-        clustering = AgglomerativeClustering(n_clusters = 4, affinity = 'precomputed', linkage = 'average').fit(dendro_arr_complete)
+        clustering = AgglomerativeClustering(n_clusters = n_clusters, affinity = 'precomputed', linkage = 'average').fit(dendro_arr_complete)
         # file1 = open("DTW_lb_sim_arr_cut_filtered.txt","w")
         # txt_time = "time taken for simulation " + str(end - start)
         # file1.writelines(str(clustering.labels_) + txt_time)
@@ -61,7 +65,7 @@ for sakoe_chiba in range(1, 31):
 
         # create dendrogram
         files_names = []
-        for i in range(0, 15):
+        for i in range(0, n_videos):
             cont = False
             for j in range(len(files_ls[i][0])):
                 if cont:
@@ -79,7 +83,7 @@ for sakoe_chiba in range(1, 31):
         # plt.savefig('./Dendrograms/DTW_lb_dendro_cut_filtered.png', format='png', bbox_inches='tight')
 
         # compare clustering groups with ground truth
-        number_matches = match_clustering_groups(ground_truth, files_names, clustering.labels_)
+        number_matches = match_clustering_groups(ground_truth, files_names, clustering.labels_, n_clusters)
         if number_matches > highest_n_matches:
             highest_n_matches = number_matches
             sc_N_comb = [sakoe_chiba, N, number_matches, tot_time]
