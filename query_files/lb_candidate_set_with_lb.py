@@ -1,7 +1,6 @@
-from common_funs import compute_df_query, compute_files_ls, dtw_horizontal
+from common_funs import compute_df, compute_files_ls
 from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, construct_upper_MBRs
 
-import numpy as np
 import warnings
 import time
 import math
@@ -14,14 +13,14 @@ index_query = 5
 # start up values for computation
 sc_N_comb = []
 
-path = "./files_dances"
+path = "../files_dances"
 start = time.time()
 # group files belonging to each video in a different sublist, combine all sublist into one list
 files_ls = compute_files_ls(path)
 ls_lb_files = []
 
 # compute angle vectors for query video
-newDF_query = compute_df_query(path, files_ls, index_query)
+newDF_query = compute_df(path, files_ls, index_query)
 
 u = upper_envelope(newDF_query, 1)
 l = lower_envelope(newDF_query, 1)
@@ -32,7 +31,7 @@ Q_l_r = construct_lower_MBRs(l, 17)
 # loop over all other videos to be compared with query
 for g in range(0, 52):
     if g != index_query:
-        newDF = compute_df_query(path, files_ls, g)
+        newDF = compute_df(path, files_ls, g)
 
         T_u_r = construct_upper_MBRs(newDF, 17)
         T_l_r = construct_lower_MBRs(newDF, 17)
@@ -66,18 +65,6 @@ end = time.time()
 tot_time = end - start
 
 print(actual_lb_ls, tot_time)
-# #Display LB Keough ranking
-# ls_lb_sorted = sorted(ls_lb_files, key=lambda x: x[2])
-# for i in range(len(ls_lb_sorted)):
-#     file_index = ls_lb_sorted[i][0]
-#     print(files_ls[file_index][0])
 
-#actual_dtw_sorted = sorted(actual_dtw_ls, key=lambda x: x[1])
-
-# #Display DTW ranking
-# for i in range(len(actual_dtw_sorted)):
-#     file_index = actual_dtw_sorted[i][0]
-#     print(files_ls[file_index][0])
-# files_ls[index_query][0]
 
 

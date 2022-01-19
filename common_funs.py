@@ -4,7 +4,6 @@ import os
 import math
 import numpy as np
 import json
-import statistics
 
 #count number of steps in a DTW path
 def dtw_steps(dtw_matrix, n, m):
@@ -29,6 +28,7 @@ def dtw_steps(dtw_matrix, n, m):
         dtw_path_ls.append([n - i - 1, m - j - 1])
     return len(dtw_path_ls)
 
+# DTW horizontal function
 def dtw_horizontal(s, t):
     n, m = len(s), len(t)
     comp_vals = 0
@@ -60,8 +60,8 @@ def dtw_horizontal(s, t):
         comp_vals += dtw_final
     return comp_vals
 
-# DTW ED vertical
-def dtw_ed(s, t):
+# DTW vertical function
+def dtw_vertical(s, t):
     # number of columns in each df, corresponding to number of frames
     n, m = len(s.columns), len(t.columns)
     dtw_matrix = np.zeros((n + 1, m + 1))
@@ -141,7 +141,7 @@ def dtw_cosSim_horizontal(s, t):
     return comp_vals
 
 # vertical DTW cosSim
-def dtw_cosSim(s, t):
+def dtw_cosSim_vertical(s, t):
     # number of columns in each df, corresponding to number of frames
     n, m = len(s.columns), len(t.columns)
     dtw_matrix = np.zeros((n + 1, m + 1))
@@ -180,7 +180,7 @@ def dtw_cosSim(s, t):
     return dtw_final
 
 # compute df for query
-def compute_df_query(path, files_ls, index):
+def compute_df(path, files_ls, index):
     newDF_AR = pd.DataFrame(index=range(29))
     i = 0
     for data in files_ls[index]:
@@ -214,13 +214,6 @@ def compute_files_ls(path):
             files_ls[n].append(file)
         file_name = str(file)
     return files_ls
-
-# compute file for query (AR, the first file in this case)
-def compute_query_ls(path, index):
-    files_AR = []
-    file = sorted(os.listdir(path))[index]
-    files_AR.append(file)
-    return files_AR
 
 def vector_vertical(s, t, n_frames):
     n_cols, m_cols = len(s.columns), len(t.columns)

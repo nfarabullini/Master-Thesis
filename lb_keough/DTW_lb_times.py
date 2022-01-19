@@ -1,4 +1,4 @@
-from common_funs import compute_df_query, compute_files_ls, dtw_horizontal
+from common_funs import compute_df, compute_files_ls, dtw_horizontal
 from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_MD, construct_upper_MBRs
 
 import numpy as np
@@ -10,21 +10,25 @@ warnings.filterwarnings('ignore')
 th = 200
 index_query = 5
 
+path = "../files_dances"
+n_videos = 52
+N_max = 21
+sc_max = 21
+
 # start up values for computation
 tot_time_current = np.inf
 sc_N_comb = []
 ls_time = []
 
-path = "./files_dances"
-for sakoe_chiba in range(1, 21):
-    for N in range(1, 21):
+for sakoe_chiba in range(1, N_max):
+    for N in range(1, sc_max):
         start = time.time()
         # group files belonging to each video in a different sublist, combine all sublist into one list
         files_ls = compute_files_ls(path)
         ls_lb_files = []
 
         # compute angle vectors for query video
-        newDF_query = compute_df_query(path, files_ls, index_query)
+        newDF_query = compute_df(path, files_ls, index_query)
 
         u = upper_envelope(newDF_query, sakoe_chiba)
         l = lower_envelope(newDF_query, sakoe_chiba)
@@ -33,18 +37,19 @@ for sakoe_chiba in range(1, 21):
         Q_l_r = construct_lower_MBRs(l, N)
 
         # loop over all other videos to be compared with query
-        for g in range(0, 52):
+        for g in range(0, n_videos):
             if g != index_query:
-                newDF = compute_df_query(path, files_ls, g)
+                newDF = compute_df(path, files_ls, g)
 
                 T_u_r = construct_upper_MBRs(newDF, N)
                 T_l_r = construct_lower_MBRs(newDF, N)
 
-                # compute LB Keough similarity
+                # compute LB Keough distance
                 lb1 = calc_min_dist_MD(T_u_r, T_l_r, Q_u_r, Q_l_r, N)
+                #lb1 = calc_min_dist_MD_filtered(T_u_r, T_l_r, Q_u_r, Q_l_r, N, th)
                 if lb1 <= th:
                     ls_lb_files.append([g, newDF, lb1])
-                print(g)
+        print(ls_lb_files)
 
         # Calculate accurate DTW
         actual_dtw_ls = []
@@ -58,29 +63,10 @@ for sakoe_chiba in range(1, 21):
         end = time.time()
         tot_time = end - start
         ls_time.append([[sakoe_chiba, N], tot_time])
-        # if tot_time < tot_time_current:
-        #     tot_time_current = tot_time
-        #     sc_N_comb = [sakoe_chiba, N]
 
-file3 = open("DTW_lb_times.txt", "w")
+file3 = open("lb_times.txt", "w")
 file3.writelines(str(ls_time))
 file3.close()
 
-# print(sc_N_comb, tot_time_current)
-# print(actual_dtw_ls)
-
-# #Display LB Keough ranking
-# ls_lb_sorted = sorted(ls_lb_files, key=lambda x: x[2])
-# for i in range(len(ls_lb_sorted)):
-#     file_index = ls_lb_sorted[i][0]
-#     print(files_ls[file_index][0])
-
-#actual_dtw_sorted = sorted(actual_dtw_ls, key=lambda x: x[1])
-
-# #Display DTW ranking
-# for i in range(len(actual_dtw_sorted)):
-#     file_index = actual_dtw_sorted[i][0]
-#     print(files_ls[file_index][0])
-# files_ls[index_query][0]
 
 

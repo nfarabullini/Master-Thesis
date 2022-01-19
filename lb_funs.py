@@ -175,6 +175,7 @@ def match_clustering_groups(ground_truth, files_names, clustering_labels, n_clus
     match = 0
     ls_1 = files_names
     ls_2 = clustering_labels.tolist()
+    #ls_2 = clustering_labels
     d_candidate = {'names': ls_1, 'groups': ls_2}
     df_candidate = pd.DataFrame(d_candidate)
     df_c_sorted = df_candidate.sort_values(by=['groups'])
