@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import warnings
 import time
+import os
 
 from scipy.cluster.hierarchy import dendrogram, linkage
 from scipy.spatial.distance import squareform
@@ -60,4 +61,5 @@ dists = squareform(dendro_arr_complete)
 Z = linkage(dists, 'average')
 plt.figure()
 dn = dendrogram(Z, labels = files_names)
-plt.savefig('Master-Thesis/Dendrograms/DTW_dendro_vertical.png', format='png', bbox_inches='tight')
+os.path.abspath('/Dendrograms/')
+plt.savefig('./DTW_dendro_vertical.png', format='png', bbox_inches='tight')
