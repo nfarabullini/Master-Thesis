@@ -20,8 +20,8 @@ tot_time_current = np.inf
 sc_N_comb = []
 ls_time = []
 
-for sakoe_chiba in range(1, N_max):
-    for N in range(1, sc_max):
+for sakoe_chiba in range(1, sc_max):
+    for N in range(1, N_max):
         start = time.time()
         # group files belonging to each video in a different sublist, combine all sublist into one list
         files_ls = compute_files_ls(path)
