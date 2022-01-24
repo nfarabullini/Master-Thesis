@@ -14,9 +14,11 @@ path = "../files_dances"
 n_videos = 52
 N_max = 21
 sc_max = 21
+ls_solutions = [18, 20, 21, 26]
 
 # start up values for computation
-ls_time = []
+sc_N_optimal_combo = []
+current_time = np.Inf
 
 for sakoe_chiba in range(1, sc_max):
     for N in range(1, N_max):
@@ -24,6 +26,7 @@ for sakoe_chiba in range(1, sc_max):
         # group files belonging to each video in a different sublist, combine all sublist into one list
         files_ls = compute_files_ls(path)
         ls_lb_files = []
+        ls_lb_indexes = []
 
         # compute angle vectors for query video
         newDF_query = compute_df(path, files_ls, index_query)
@@ -47,24 +50,28 @@ for sakoe_chiba in range(1, sc_max):
                 #lb1 = calc_min_dist_MD_filtered(T_u_r, T_l_r, Q_u_r, Q_l_r, N, th)
                 if lb1 <= th:
                     ls_lb_files.append([g, newDF, lb1])
-        print(ls_lb_files)
+                    ls_lb_indexes.append(g)
 
-        # Calculate accurate DTW
-        actual_dtw_ls = []
-        for i in range(len(ls_lb_files)):
-            newDF = ls_lb_files[i][1]
-            actual_dtw = dtw_horizontal(newDF, newDF_query)
-            if actual_dtw <= th:
-                actual_dtw_ls.append([ls_lb_files[i][0], actual_dtw])
-            print(i)
+        # check that candidate set contains all entries in final solutions set
+        if len(ls_lb_indexes) >= len(ls_solutions):
+            count_correct_entries = 0
+            for ind_lb in ls_lb_indexes:
+                if ind_lb in ls_solutions:
+                    count_correct_entries += 1
 
-        end = time.time()
-        tot_time = end - start
-        ls_time.append([[sakoe_chiba, N], tot_time])
+            if count_correct_entries == len(ls_solutions):
+                # Calculate accurate DTW
+                actual_dtw_ls = []
+                for i in range(len(ls_lb_files)):
+                    newDF = ls_lb_files[i][1]
+                    actual_dtw = dtw_horizontal(newDF, newDF_query)
+                    if actual_dtw <= th:
+                        actual_dtw_ls.append([ls_lb_files[i][0], actual_dtw])
 
-file3 = open("lb_times.txt", "w")
-file3.writelines(str(ls_time))
-file3.close()
+                end = time.time()
+                tot_time = end - start
+                if tot_time < current_time:
+                    sc_N_optimal_combo = [sakoe_chiba, N, tot_time]
+                    current_time = tot_time
 
-
-
+print(sc_N_optimal_combo)
