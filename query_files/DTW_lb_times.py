@@ -1,7 +1,6 @@
 from common_funs import compute_df, compute_files_ls, dtw_horizontal
 from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_MD, construct_upper_MBRs
 
-import numpy as np
 import warnings
 import time
 

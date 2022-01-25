@@ -9,14 +9,14 @@ warnings.filterwarnings('ignore')
 # initial values to be set by the user
 th = 200
 index_query = 5
-
-path = "./files_dances"
-n_videos = 52
-N_max = 21
-sc_max = 21
 ls_solutions = [18, 20, 21, 26]
 
 # start up values for computation
+path = "../files_dances"
+n_videos = 52
+N_max = 21
+sc_max = 21
+
 sc_N_optimal_combo = []
 current_time = np.Inf
 
