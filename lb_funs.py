@@ -15,7 +15,8 @@ def calc_min_dist(T_h, T_l, Q_U, Q_L, N):
         if T_h[p] < Q_L[p]:
             d = dist_fun(T_h[p], Q_L[p])
         lb_cum += (len_d / N) * d
-    return math.sqrt(lb_cum)
+
+    return math.sqrt(lb_cum/N)
 
 def calc_min_dist_MD(T_h, T_l, Q_U, Q_L, N):
     cum_d = 0

@@ -21,7 +21,7 @@ th_best = []
 current_candidate_length = np.Inf
 end_simulation = False
 
-for th in range(10, 200):
+for th in range(63, 64):
     start = time.time()
     # group files belonging to each video in a different sublist, combine all sublist into one list
     files_ls = compute_files_ls(path)
@@ -47,11 +47,12 @@ for th in range(10, 200):
 
             # compute LB Keough distance
             lb1 = calc_min_dist_MD(T_u_r, T_l_r, Q_u_r, Q_l_r, N)
+
             # lb1 = calc_min_dist_MD_filtered(T_u_r, T_l_r, Q_u_r, Q_l_r, N, th)
             if lb1 <= th:
                 ls_lb_files.append([g, newDF, lb1])
                 ls_lb_indexes.append(g)
-
+    print(ls_lb_indexes)
     # check that candidate set contains all entries in solutions set
     if len(ls_lb_indexes) >= len(ls_solutions):
         count_correct_entries = 0
@@ -64,11 +65,14 @@ for th in range(10, 200):
                 end = time.time()
                 tot_time = end - start
                 th_best = [th, tot_time]
+                current_candidate_length = len(ls_lb_indexes)
+                print(th_best)
                 if ls_lb_indexes == ls_solutions:
                     end_simulation = True
+                    print("Optimal combo")
                     print(th_best)
                     break
-    if end_simulation:
+    if ls_lb_indexes == ls_solutions:
         print(th_best)
         break
 
