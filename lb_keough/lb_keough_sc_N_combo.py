@@ -1,3 +1,5 @@
+'''Script to find the optimal combination of MBRs and Sakoe-Chiba length'''
+
 from common_funs import compute_df, compute_files_ls
 from lb_funs import calc_min_dist_MD, upper_envelope, lower_envelope, construct_lower_MBRs, construct_upper_MBRs, match_clustering_groups
 

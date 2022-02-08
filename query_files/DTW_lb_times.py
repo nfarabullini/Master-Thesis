@@ -9,7 +9,7 @@ warnings.filterwarnings('ignore')
 th = 200
 index_query = 5
 
-path = "./files_dances"
+path = "../files_dances"
 n_videos = 52
 N_max = 21
 sc_max = 21

@@ -1,3 +1,5 @@
+'''Script for LB_Keough functions'''
+
 import numpy as np
 import pandas as pd
 import math

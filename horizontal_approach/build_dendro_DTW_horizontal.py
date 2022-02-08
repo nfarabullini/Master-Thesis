@@ -1,3 +1,5 @@
+'''Script to build dendrogram for DTW with Euclidean distance method horizontally'''
+
 from common_funs import compute_df, compute_files_ls, dtw_horizontal
 
 import numpy as np

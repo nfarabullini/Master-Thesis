@@ -1,3 +1,5 @@
+'''Script to build plots for time measurements from LB_Keough and DTW combination given a query'''
+
 import matplotlib.pyplot as plt
 import pandas as pd
 

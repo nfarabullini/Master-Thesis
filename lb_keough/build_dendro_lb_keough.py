@@ -1,3 +1,5 @@
+'''Script to build dendrogram for LB_Keough as a distance measure using values from DTW_lb_N_alg.py'''
+
 from common_funs import compute_df, compute_files_ls
 from lb_funs import calc_min_dist_MD, upper_envelope, lower_envelope, construct_lower_MBRs, construct_upper_MBRs
 

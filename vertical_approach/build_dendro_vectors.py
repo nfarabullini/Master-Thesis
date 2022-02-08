@@ -1,3 +1,5 @@
+'''Script to build dendrogram for past and future vectors method vertically'''
+
 from common_funs import compute_df, compute_files_ls, vector_vertical
 
 import numpy as np

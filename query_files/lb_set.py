@@ -1,3 +1,5 @@
+'''Script to extract set of videos below a threshold with LB_Keough only given a query'''
+
 from common_funs import compute_df, compute_files_ls
 from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_normalized, construct_upper_MBRs
 

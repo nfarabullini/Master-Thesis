@@ -1,3 +1,5 @@
+'''Script to build dendrogram for DTW with Cosine Similarity method vertically'''
+
 from common_funs import compute_df, compute_files_ls, dtw_cosSim_vertical
 
 import numpy as np

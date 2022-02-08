@@ -1,3 +1,5 @@
+'''Script for functions used in multiple places in repository'''
+
 from metrics_msproject import compute_angle_vector
 import pandas as pd
 import os

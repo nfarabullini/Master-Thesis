@@ -1,3 +1,5 @@
+'''Script to compare number of matches from a clustering set with ground truth'''
+
 from common_funs import compute_files_ls
 from lb_funs import match_clustering_groups
 

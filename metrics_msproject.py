@@ -1,3 +1,5 @@
+'''Script with functions inherited from "Retrieval and Visual Analysis of Dance Moves" '''
+
 import numpy as np
 
 def read_keypoints(data):

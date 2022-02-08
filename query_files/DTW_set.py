@@ -1,3 +1,5 @@
+'''Script to extract set of videos below a threshold with DTW only given a query'''
+
 from common_funs import compute_df, compute_files_ls, dtw_horizontal
 
 import warnings
