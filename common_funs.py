@@ -93,53 +93,6 @@ def dtw_vertical(s, t):
     dtw_final = dtw_matrix[n, m]/n_steps
     return dtw_final
 
-def dtw_cosSim_horizontal(s, t):
-    n, m = len(s), len(t)
-    comp_vals = 0
-    for i in range(n):
-        dtw_matrix = np.zeros((len(s.iloc[i]) + 1, len(t.iloc[i]) + 1))
-        for j in range(len(s.iloc[i]) + 1):
-            for k in range(len(t.iloc[i]) + 1):
-                dtw_matrix[j, k] = np.inf
-        dtw_matrix[0, 0] = 0
-        vec_vals = [0] * (len(t.iloc[i]) + 1)
-        #compute magnitude for set of first angle vectors
-        s_squared = []
-        for k in range(1, len(t.iloc[i]) + 1):
-            s_squared_j = 0
-            for j in range(1, len(s.iloc[i]) + 1):
-                if not (math.isnan((s.iloc[i][j - 1] * t.iloc[i][k - 1]))):
-                    s_squared_j += pow(s.iloc[i][j - 1], 2)
-            s_squared.append(s_squared_j)
-        for j in range(1, len(s.iloc[i]) + 1):
-            # compute magnitude of second angle vector
-            t_squared = 0
-            for k in range(1, len(t.iloc[i]) + 1):
-                if not (math.isnan((s.iloc[i][j - 1] * t.iloc[i][k - 1]))):
-                    t_squared += pow(t.iloc[i][k - 1], 2)
-            for k in range(1, len(t.iloc[i]) + 1):
-                # multi-dimensional case
-                count = 0
-                if not (math.isnan(s.iloc[i][j - 1] * t.iloc[i][k - 1])):
-                    mult_entries = s.iloc[i][j - 1] * t.iloc[i][k - 1]
-                    count += 1
-                if count > 0:
-                    cost = mult_entries / (math.sqrt(s_squared[k - 1]) * math.sqrt(t_squared))
-                    # adjust cost with subtracting 1
-                    cost = 1 - cost
-                    # take last min from a square box
-                    last_min = np.min([dtw_matrix[j - 1, k], dtw_matrix[j, k - 1], dtw_matrix[j - 1, k - 1]])
-                    dtw_matrix[j, k] = cost + last_min
-                    vec_vals[k] = cost + last_min
-                else:
-                    dtw_matrix[j, k] = vec_vals[k]
-        # divide by length of DTW path, aka the number of steps
-        n_steps = dtw_steps(dtw_matrix, len(s.iloc[i]), len(t.iloc[i]))
-        dtw_final = dtw_matrix[len(s.iloc[i]), len(t.iloc[i])] / n_steps
-        #dtw_final = dtw_matrix[len(s.iloc[i]), len(t.iloc[i])]
-        comp_vals += dtw_final
-    return comp_vals
-
 # vertical DTW cosSim
 def dtw_cosSim_vertical(s, t):
     # number of columns in each df, corresponding to number of frames

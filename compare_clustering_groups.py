@@ -30,6 +30,6 @@ for i in range(0, n_videos):
     if cont:
         continue
 
-clustering_labels = [7, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 3, 5, 4, 6, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+clustering_labels = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 7, 6, 1, 1, 4, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 3]
 number_matches = match_clustering_groups(ground_truth, files_names, clustering_labels, n_clusters)
 print(number_matches)

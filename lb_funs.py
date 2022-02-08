@@ -5,7 +5,7 @@ import math
 def dist_fun(a, b):
     return pow(a - b, 2)
 
-def calc_min_dist(T_h, T_l, Q_U, Q_L, N):
+def calc_min_dist_normalized(T_h, T_l, Q_U, Q_L, N):
     lb_cum = 0
     len_d = len(T_h)
     for p in range(len_d):
@@ -17,6 +17,19 @@ def calc_min_dist(T_h, T_l, Q_U, Q_L, N):
         lb_cum += (len_d / N) * d
 
     return math.sqrt(lb_cum/N)
+
+def calc_min_dist(T_h, T_l, Q_U, Q_L, N):
+    lb_cum = 0
+    len_d = len(T_h)
+    for p in range(len_d):
+        d = 0
+        if T_l[p] > Q_U[p]:
+            d = dist_fun(T_l[p], Q_U[p])
+        if T_h[p] < Q_L[p]:
+            d = dist_fun(T_h[p], Q_L[p])
+        lb_cum += (len_d / N) * d
+
+    return math.sqrt(lb_cum)
 
 def calc_min_dist_MD(T_h, T_l, Q_U, Q_L, N):
     cum_d = 0
@@ -175,8 +188,8 @@ def FindMaxLength(lst):
 def match_clustering_groups(ground_truth, files_names, clustering_labels, n_clusters):
     match = 0
     ls_1 = files_names
-    ls_2 = clustering_labels.tolist()
-    #ls_2 = clustering_labels
+    #ls_2 = clustering_labels.tolist()
+    ls_2 = clustering_labels
     d_candidate = {'names': ls_1, 'groups': ls_2}
     df_candidate = pd.DataFrame(d_candidate)
     df_c_sorted = df_candidate.sort_values(by=['groups'])
