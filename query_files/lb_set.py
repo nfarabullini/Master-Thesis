@@ -1,7 +1,7 @@
 '''Script to extract set of videos below a threshold with LB_Keough only given a query'''
 
 from common_funs import compute_df, compute_files_ls
-from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_normalized, construct_upper_MBRs
+from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_MD_normalized, construct_upper_MBRs
 
 import numpy as np
 import warnings
@@ -49,7 +49,7 @@ for g in range(0, n_videos):
         T_l_r = construct_lower_MBRs(newDF, N)
 
         # compute LB Keough distance
-        lb1 = calc_min_dist_normalized(T_u_r, T_l_r, Q_u_r, Q_l_r, N)
+        lb1 = calc_min_dist_MD_normalized(T_u_r, T_l_r, Q_u_r, Q_l_r, N)
 
         # lb1 = calc_min_dist_MD_filtered(T_u_r, T_l_r, Q_u_r, Q_l_r, N, th)
         if lb1 <= th:

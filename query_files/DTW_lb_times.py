@@ -1,5 +1,7 @@
+'''Script to find all times for MBRs and Sakoe-Chiba lengths combinations with DTW for query video'''
+
 from common_funs import compute_df, compute_files_ls, dtw_horizontal
-from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_normalized, construct_upper_MBRs
+from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_MD_normalized, construct_upper_MBRs
 
 import warnings
 import time
@@ -42,7 +44,7 @@ for sakoe_chiba in range(1, sc_max):
                 T_l_r = construct_lower_MBRs(newDF, N)
 
                 # compute LB Keough distance
-                lb1 = calc_min_dist_normalized(T_u_r, T_l_r, Q_u_r, Q_l_r, N)
+                lb1 = calc_min_dist_MD_normalized(T_u_r, T_l_r, Q_u_r, Q_l_r, N)
                 #lb1 = calc_min_dist_MD_filtered(T_u_r, T_l_r, Q_u_r, Q_l_r, N, th)
                 if lb1 <= th:
                     ls_lb_files.append([g, newDF, lb1])

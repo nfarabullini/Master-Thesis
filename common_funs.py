@@ -1,4 +1,4 @@
-'''Script for functions used in multiple places in repository'''
+'''Script for functions used in multiple places throughout the repository'''
 
 from metrics_msproject import compute_angle_vector
 import pandas as pd
@@ -134,7 +134,7 @@ def dtw_cosSim_vertical(s, t):
     dtw_final = dtw_matrix[n, m]/n_steps
     return dtw_final
 
-# compute df for query
+# compute df for video
 def compute_df(path, files_ls, index):
     newDF_AR = pd.DataFrame(index=range(29))
     i = 0
@@ -149,7 +149,7 @@ def compute_df(path, files_ls, index):
         f.close()
     return newDF_AR
 
-# compute files list
+# compute files list from dataset
 def compute_files_ls(path):
     n = 0
     m = 0
@@ -170,6 +170,7 @@ def compute_files_ls(path):
         file_name = str(file)
     return files_ls
 
+# past and future vectors approach
 def vector_vertical(s, t, n_frames):
     n_cols, m_cols = len(s.columns), len(t.columns)
     # vectors are of different lengths, take the shortest and loop over values for both videos for that range

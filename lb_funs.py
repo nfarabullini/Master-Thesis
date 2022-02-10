@@ -39,6 +39,12 @@ def calc_min_dist_MD(T_h, T_l, Q_U, Q_L, N):
         cum_d += calc_min_dist(T_h.iloc[i], T_l.iloc[i], Q_U.iloc[i], Q_L.iloc[i], N)
     return cum_d
 
+def calc_min_dist_MD_normalized(T_h, T_l, Q_U, Q_L, N):
+    cum_d = 0
+    for i in range(len(T_h)):
+        cum_d += calc_min_dist_normalized(T_h.iloc[i], T_l.iloc[i], Q_U.iloc[i], Q_L.iloc[i], N)
+    return cum_d
+
 def calc_min_dist_filtered(T_h, T_l, Q_U, Q_L, N, th):
     lb_cum = 0
     len_d = len(T_h)
@@ -190,8 +196,10 @@ def FindMaxLength(lst):
 def match_clustering_groups(ground_truth, files_names, clustering_labels, n_clusters):
     match = 0
     ls_1 = files_names
-    #ls_2 = clustering_labels.tolist()
-    ls_2 = clustering_labels
+    if isinstance(clustering_labels, list):
+        ls_2 = clustering_labels
+    else:
+        ls_2 = clustering_labels.tolist()
     d_candidate = {'names': ls_1, 'groups': ls_2}
     df_candidate = pd.DataFrame(d_candidate)
     df_c_sorted = df_candidate.sort_values(by=['groups'])
