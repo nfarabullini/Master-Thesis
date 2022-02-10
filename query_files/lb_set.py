@@ -17,6 +17,7 @@ index_query = 5
 path = "./files_dances"
 sakoe_chiba = 19
 N = 15
+# solution set of videos from DTW only
 ls_solutions = [18, 20, 21, 26]
 
 th_best = []
