@@ -63,7 +63,7 @@ for sakoe_chiba in range(1, sc_max):
         tot_time = end - start
         ls_time.append([[sakoe_chiba, N], tot_time])
 
-file3 = open("lb_times.txt", "w")
+file3 = open("DTW_lb_times.txt", "w")
 file3.writelines(str(ls_time))
 file3.close()
 
