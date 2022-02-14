@@ -7,6 +7,7 @@ import warnings
 import time
 warnings.filterwarnings('ignore')
 # initial values to be set by the user
+# th_lb comes from the output of the script lb_min_th.py
 th_lb = 63
 th = 200
 index_query = 5
