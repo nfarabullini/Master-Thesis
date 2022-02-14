@@ -1,4 +1,5 @@
 '''Script to measure time to get final set for query video with optimal values for MBRs and Sakoe-China lengths'''
+''' and minimum threhsold obtained from script find_lb_min_th.py'''
 
 from common_funs import compute_df, compute_files_ls, dtw_horizontal
 from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_MD_normalized, construct_upper_MBRs
@@ -12,7 +13,7 @@ th_lb = 63
 th = 200
 index_query = 5
 
-path = "../files_dances"
+path = "./files_dances"
 n_videos = 52
 N = 15
 sakoe_chiba = 19

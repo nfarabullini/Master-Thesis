@@ -1,8 +1,8 @@
 ## Master-Thesis
 
-This repository includes all code that was used for the Master Thesis.
+This repository includes all code that was used for the Master Thesis. All code was written in Python in the PyCharm IDE.
 
-This Master thesis aims at evaluating different similarity measures for body movement videos and creating an indexing structure for fast creation of a set of videos similar to a predefined query. 
+This Master thesis aims at evaluating different similarity measures for body movement videos and creating an indexing structure for fast creation of a set of videos similar to a predefined query.
 
 **files_dances**: includes the filtered set of JSON files for the videos frames
 

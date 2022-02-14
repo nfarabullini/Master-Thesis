@@ -9,7 +9,7 @@ import time
 from sklearn.cluster import AgglomerativeClustering
 warnings.filterwarnings('ignore')
 
-path = "../files_dances"
+path = "./files_dances"
 n_videos = 52
 N_max = 21
 sc_max = 21
@@ -19,6 +19,9 @@ files_ls = compute_files_ls(path)
 highest_n_matches = 0
 sc_N_comb = []
 
+#check time to find the optimal combination of MBRs and Sakoe-Chiba lengths
+start_overall_time = time.time()
+#loop over all values for MBRs and Sakoe-Chiba lengths
 for sakoe_chiba in range(1, N_max):
     for N in range(1, sc_max):
         files_ls = compute_files_ls(path)
@@ -64,7 +67,7 @@ for sakoe_chiba in range(1, N_max):
 
         # compare clustering groups with ground truth
         files_names = []
-        for i in range(0, 52):
+        for i in range(0, n_videos):
             cont = False
             for j in range(len(files_ls[i][0])):
                 if cont:
@@ -84,8 +87,9 @@ for sakoe_chiba in range(1, N_max):
             highest_n_matches = number_matches
             sc_N_comb = [sakoe_chiba, N, number_matches, tot_time]
             tot_time_current = tot_time
-
+end_overall_time = time.time()
 print(sc_N_comb)
+print(end_overall_time - start_overall_time)
 file1 = open("lb_sc_N_combination.txt", "w")
 file1.writelines(str(sc_N_comb) + "Total time taken: " + str(tot_time_current))
 file1.close()

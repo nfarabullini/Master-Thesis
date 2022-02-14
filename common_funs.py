@@ -7,6 +7,42 @@ import math
 import numpy as np
 import json
 
+# compute df for video
+def compute_df(path, files_ls, index):
+    newDF_AR = pd.DataFrame(index=range(29))
+    i = 0
+    for data in files_ls[index]:
+        f = open(os.path.join(path, data), 'r')
+        data = json.load(f)
+        bodyvector1 = compute_angle_vector(data)
+        new_bodyvector = pd.DataFrame(bodyvector1)
+
+        newDF_AR[i] = new_bodyvector
+        i += 1
+        f.close()
+    return newDF_AR
+
+# compute files list from dataset
+def compute_files_ls(path):
+    n = 0
+    m = 0
+    files_ls = [[] for i in range(0, 52)]
+    for file in sorted(os.listdir(path))[1:]:
+        file_name_new = str(file)
+        if m == 0:
+            files_ls[n].append(file)
+            m = m + 1
+        elif file_name_new[0] == file_name[0] and file_name_new[1] == file_name[1] and \
+                file_name_new[2] == file_name[2] and file_name_new[3] == file_name[3] and file_name_new[4] == file_name[4] \
+                and file_name_new[5] == file_name[5] and file_name_new[6] == file_name[6] and file_name_new[7] == file_name[7]\
+                and file_name_new[8] == file_name[8] and file_name_new[9] == file_name[9] and file_name_new[10] == file_name[10]:
+            files_ls[n].append(file)
+        else:
+            n = n + 1
+            files_ls[n].append(file)
+        file_name = str(file)
+    return files_ls
+
 #count number of steps in a DTW path
 def dtw_steps(dtw_matrix, n, m):
     dtw_path_ls = [[0, 0]]
@@ -62,8 +98,8 @@ def dtw_horizontal(s, t):
         comp_vals += dtw_final
     return comp_vals
 
-# DTW vertical function
-def dtw_vertical(s, t):
+# DTW vertical function with Euclidean distance
+def dtw_ed_vertical(s, t):
     # number of columns in each df, corresponding to number of frames
     n, m = len(s.columns), len(t.columns)
     dtw_matrix = np.zeros((n + 1, m + 1))
@@ -95,7 +131,7 @@ def dtw_vertical(s, t):
     dtw_final = dtw_matrix[n, m]/n_steps
     return dtw_final
 
-# vertical DTW cosSim
+# DTW vertical with Cosine Similarity
 def dtw_cosSim_vertical(s, t):
     # number of columns in each df, corresponding to number of frames
     n, m = len(s.columns), len(t.columns)
@@ -134,43 +170,7 @@ def dtw_cosSim_vertical(s, t):
     dtw_final = dtw_matrix[n, m]/n_steps
     return dtw_final
 
-# compute df for video
-def compute_df(path, files_ls, index):
-    newDF_AR = pd.DataFrame(index=range(29))
-    i = 0
-    for data in files_ls[index]:
-        f = open(os.path.join(path, data), 'r')
-        data = json.load(f)
-        bodyvector1 = compute_angle_vector(data)
-        new_bodyvector = pd.DataFrame(bodyvector1)
-
-        newDF_AR[i] = new_bodyvector
-        i += 1
-        f.close()
-    return newDF_AR
-
-# compute files list from dataset
-def compute_files_ls(path):
-    n = 0
-    m = 0
-    files_ls = [[] for i in range(0, 52)]
-    for file in sorted(os.listdir(path))[1:]:
-        file_name_new = str(file)
-        if m == 0:
-            files_ls[n].append(file)
-            m = m + 1
-        elif file_name_new[0] == file_name[0] and file_name_new[1] == file_name[1] and \
-                file_name_new[2] == file_name[2] and file_name_new[3] == file_name[3] and file_name_new[4] == file_name[4] \
-                and file_name_new[5] == file_name[5] and file_name_new[6] == file_name[6] and file_name_new[7] == file_name[7]\
-                and file_name_new[8] == file_name[8] and file_name_new[9] == file_name[9] and file_name_new[10] == file_name[10]:
-            files_ls[n].append(file)
-        else:
-            n = n + 1
-            files_ls[n].append(file)
-        file_name = str(file)
-    return files_ls
-
-# past and future vectors approach
+# past and future vectors method
 def vector_vertical(s, t, n_frames):
     n_cols, m_cols = len(s.columns), len(t.columns)
     # vectors are of different lengths, take the shortest and loop over values for both videos for that range

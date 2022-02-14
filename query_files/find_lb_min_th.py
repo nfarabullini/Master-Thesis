@@ -1,4 +1,4 @@
-'''Script to extract set of videos below a threshold with LB_Keough only given a query'''
+'''Script to find minimum threshold for the candidate set with optimal values for MBRs and Sakoe-Chiba lengths for LB_Keough only given a query'''
 
 from common_funs import compute_df, compute_files_ls
 from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_MD_normalized, construct_upper_MBRs
@@ -23,7 +23,6 @@ ls_solutions = [18, 20, 21, 26]
 
 th_best = []
 current_candidate_length = np.Inf
-end_simulation = False
 
 for th_lb in range(1, th):
 

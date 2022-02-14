@@ -1,6 +1,6 @@
 '''Script to build dendrogram for DTW with Euclidean distance method vertically'''
 
-from common_funs import compute_df, compute_files_ls, dtw_vertical
+from common_funs import compute_df, compute_files_ls, dtw_ed_vertical
 
 import numpy as np
 import pandas as pd
@@ -30,7 +30,7 @@ for index_query in range(0, n_videos):
     for g in range(index_query + 1, n_videos):
         newDF = compute_df(path, files_ls, g)
         # compute DTW similarity
-        dtw_sim = dtw_vertical(newDF, newDF_query)
+        dtw_sim = dtw_ed_vertical(newDF, newDF_query)
         dendro_arr_fill[index_query, g] = dtw_sim
         print(g)
     print(index_query)
