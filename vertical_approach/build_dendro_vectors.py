@@ -30,7 +30,7 @@ for index_query in range(0, n_videos):
     for g in range(index_query + 1, n_videos):
         newDF = compute_df(path, files_ls, g)
         # compute vector similarity
-        dtw_sim = vector_vertical(newDF, newDF_query)
+        dtw_sim = vector_vertical(newDF, newDF_query, 6)
 
         dendro_arr_fill[index_query, g] = dtw_sim
         print(g)
