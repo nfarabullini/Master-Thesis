@@ -8,6 +8,7 @@ read_file = pd.read_csv (r'DTW_lb_times - DTW_lb_times.csv')
 fig = plt.figure()
 ax = plt.axes(projection ='3d')
 ax.scatter3D(read_file["Sakoe_Chiba"], read_file["N"], read_file["Time (s)"])
+plt.savefig('./3D_MBRs_sc.png', format='png', bbox_inches='tight')
 
 # 2D plots
 sc_1 = 10
@@ -23,6 +24,7 @@ plt.legend()
 plt.ylabel('Time (s)')
 plt.xlabel('MBRs')
 plt.title("Time VS MBRs")
+plt.savefig('./sc_changing_MBRs.png', format='png', bbox_inches='tight')
 
 N_1 = 10
 N_2 = 15
@@ -37,4 +39,4 @@ plt.legend()
 plt.ylabel('Time (s)')
 plt.xlabel('Sakoe-Chiba lengths')
 plt.title("Time VS Sakoe-Chiba lengths")
-plt.show()
+plt.savefig('./MBRs_changing_sc.png', format='png', bbox_inches='tight')
