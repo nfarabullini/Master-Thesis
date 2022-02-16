@@ -3,7 +3,7 @@
 from common_funs import compute_files_ls
 from lb_funs import match_clustering_groups
 
-path = "./files_dances"
+path = "../files_dances"
 files_ls = compute_files_ls(path)
 n_clusters = 9
 n_videos = 52
@@ -32,6 +32,6 @@ for i in range(0, n_videos):
     if cont:
         continue
 
-clustering_labels = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 7, 6, 1, 1, 4, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 3]
+clustering_labels = [2, 5, 5, 5, 5, 2, 0, 0, 4, 5, 5, 6, 6, 6, 6, 6, 6, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 4, 6, 6, 6, 6, 6, 6, 6, 7, 6, 8, 2, 3, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1]
 number_matches = match_clustering_groups(ground_truth, files_names, clustering_labels, n_clusters)
 print(number_matches)

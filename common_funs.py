@@ -8,19 +8,28 @@ import numpy as np
 import json
 
 # compute df for video
+# function edited but inherited from the MSc project "Retrieval and Visual Analysis of Dance Moves"
 def compute_df(path, files_ls, index):
-    newDF_AR = pd.DataFrame(index=range(29))
+    # get number of dimensions
+    f = open(os.path.join(path, files_ls[index][0]), 'r')
+    data = json.load(f)
+    bodyvector1 = compute_angle_vector(data)
+    #create df for all frames
+    newDF = pd.DataFrame(index=range(len(bodyvector1)))
     i = 0
     for data in files_ls[index]:
+        # import pandas as pd
+        # url = urljoin('https://raw.githubusercontent.com/nfarabullini/Master-Thesis/main/files_keyframes/', data)
+        # df = pd.read_json(url)
         f = open(os.path.join(path, data), 'r')
         data = json.load(f)
         bodyvector1 = compute_angle_vector(data)
         new_bodyvector = pd.DataFrame(bodyvector1)
 
-        newDF_AR[i] = new_bodyvector
+        newDF[i] = new_bodyvector
         i += 1
         f.close()
-    return newDF_AR
+    return newDF
 
 # compute files list from dataset
 def compute_files_ls(path):

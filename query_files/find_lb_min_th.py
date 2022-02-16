@@ -1,7 +1,7 @@
 '''Script to find minimum threshold for the candidate set with optimal values for MBRs and Sakoe-Chiba lengths for LB_Keough only given a query'''
 
 from common_funs import compute_df, compute_files_ls
-from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_MD_normalized, construct_upper_MBRs
+from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_MD_normalized, construct_upper_MBRs, calc_min_dist_MD_normalized
 
 import numpy as np
 import warnings
@@ -15,7 +15,7 @@ index_query = 5
 
 # start up values for computation
 path = "../files_dances"
-sakoe_chiba = 19
+sakoe_chiba = 3
 N = 15
 th = 200
 # solution set of videos from DTW only
@@ -24,7 +24,7 @@ ls_solutions = [18, 20, 21, 26]
 th_best = []
 current_candidate_length = np.Inf
 
-for th_lb in range(1, th):
+for th_lb in range(200, 201):
 
     start = time.time()
     # group files belonging to each video in a different sublist, combine all sublist into one list
@@ -74,6 +74,6 @@ for th_lb in range(1, th):
                 print(ls_lb_indexes)
                 break
         else:
-            print("Threshold value of " + str(th_lb) + " is too low")
+            print("List does not include all videos in solution")
     else:
         print("Threshold value of " + str(th_lb) + " is too low")

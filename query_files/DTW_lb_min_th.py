@@ -16,7 +16,7 @@ index_query = 5
 path = "./files_dances"
 n_videos = 52
 N = 15
-sakoe_chiba = 19
+sakoe_chiba = 3
 
 start = time.time()
 # group files belonging to each video in a different sublist, combine all sublist into one list

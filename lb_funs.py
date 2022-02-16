@@ -1,4 +1,5 @@
 '''Script for LB_Keough functions'''
+'''The algorithm concepts can be found here: https://www.cs.ucr.edu/~eamonn/KAIS_2004_warping.pdf'''
 
 import numpy as np
 import pandas as pd
