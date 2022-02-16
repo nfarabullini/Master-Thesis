@@ -18,9 +18,6 @@ def compute_df(path, files_ls, index):
     newDF = pd.DataFrame(index=range(len(bodyvector1)))
     i = 0
     for data in files_ls[index]:
-        # import pandas as pd
-        # url = urljoin('https://raw.githubusercontent.com/nfarabullini/Master-Thesis/main/files_keyframes/', data)
-        # df = pd.read_json(url)
         f = open(os.path.join(path, data), 'r')
         data = json.load(f)
         bodyvector1 = compute_angle_vector(data)

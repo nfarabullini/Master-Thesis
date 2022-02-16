@@ -9,7 +9,7 @@ import time
 from sklearn.cluster import AgglomerativeClustering
 warnings.filterwarnings('ignore')
 
-path = "./files_dances"
+path = "../files_dances"
 n_videos = 52
 N_max = 21
 sc_max = 21

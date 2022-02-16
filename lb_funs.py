@@ -46,29 +46,6 @@ def calc_min_dist_MD_normalized(T_h, T_l, Q_U, Q_L, N):
         cum_d += calc_min_dist_normalized(T_h.iloc[i], T_l.iloc[i], Q_U.iloc[i], Q_L.iloc[i], N)
     return cum_d
 
-def calc_min_dist_filtered(T_h, T_l, Q_U, Q_L, N, th):
-    lb_cum = 0
-    len_d = len(T_h)
-    th_2 = pow(th, 2)
-    for p in range(len_d):
-        d = 0
-        if T_l[p] > Q_U[p]:
-            d = dist_fun(T_l[p], Q_U[p])
-        if T_h[p] < Q_L[p]:
-            d = dist_fun(T_h[p], Q_L[p])
-        lb_cum += (len_d / N) * d
-        if lb_cum > th_2:
-            return lb_cum
-    return math.sqrt(lb_cum)
-
-def calc_min_dist_MD_filtered(T_h, T_l, Q_U, Q_L, N, th):
-    cum_d = 0
-    for i in range(len(T_h)):
-        if cum_d > th:
-            return cum_d
-        cum_d += calc_min_dist_filtered(T_h.iloc[i], T_l.iloc[i], Q_U.iloc[i], Q_L.iloc[i], N, th)
-    return cum_d
-
 def upper_envelope(series, sakoe_chiba):
     n_s = len(series)
     ls_up = []

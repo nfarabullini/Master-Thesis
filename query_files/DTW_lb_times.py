@@ -1,7 +1,7 @@
 '''Script to find all times for MBRs and Sakoe-Chiba lengths combinations with DTW for query video'''
 
 from common_funs import compute_df, compute_files_ls, dtw_horizontal
-from lb_funs import calc_min_dist_MD_filtered, upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_MD_normalized, construct_upper_MBRs
+from lb_funs import upper_envelope, lower_envelope, construct_lower_MBRs, calc_min_dist_MD_normalized, construct_upper_MBRs
 
 import warnings
 import time
