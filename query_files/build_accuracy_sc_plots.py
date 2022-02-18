@@ -49,6 +49,9 @@ for sakoe_chiba in range(1, 21):
             if lb1 <= th:
                 ls_lb_files.append(g)
 
+    end = time.time()
+    tot_time = end - start
+
     # check how many entries of the final set the candidate set has
     TP = 0
     for ind_lb in ls_lb_files:
@@ -63,8 +66,6 @@ for sakoe_chiba in range(1, 21):
     precision = TP/(TP+FP)
     f_score = 2*(precision*recall)/(precision+recall)
 
-    end = time.time()
-    tot_time = end - start
     ls_measurements.append([sakoe_chiba, recall, precision, f_score, tot_time])
 
 pd_measurements = pd.DataFrame(ls_measurements, columns = ['sakoe_chiba', 'recall', 'precision', 'f_score', 'tot_time'])
@@ -99,6 +100,5 @@ plt.xlabel('Sakoe-Chiba lengths')
 plt.ylabel('Time (s)')
 plt.title("Time VS Sakoe-Chiba lengths")
 plt.savefig('./query_files/plots/time_VS_sc.png', format='png', bbox_inches='tight')
-
 
 plt.show()
