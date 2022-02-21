@@ -3,7 +3,7 @@
 from common_funs import compute_files_ls
 from lb_funs import match_clustering_groups
 
-path = "../files_dances"
+path = "./files_dances"
 files_ls = compute_files_ls(path)
 n_clusters = 9
 n_videos = 52
