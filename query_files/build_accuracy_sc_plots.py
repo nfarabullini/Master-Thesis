@@ -69,7 +69,7 @@ for sakoe_chiba in range(1, 21):
 
 pd_measurements = pd.DataFrame(ls_measurements, columns = ['sakoe_chiba', 'recall', 'precision', 'f_score', 'tot_time'])
 
-print(pd_measurements["tot_time"])
+# Precision plot
 plt.figure()
 plt.plot(pd_measurements["sakoe_chiba"], pd_measurements["precision"])
 plt.legend()
@@ -78,6 +78,7 @@ plt.ylabel('Precision')
 plt.title("Precision VS Sakoe-Chiba lengths")
 plt.savefig('./query_files/plots/precision_VS_sc.png', format='png', bbox_inches='tight')
 
+# Recall plot
 plt.figure()
 plt.plot(pd_measurements["sakoe_chiba"], pd_measurements["recall"])
 plt.legend()
@@ -86,6 +87,7 @@ plt.ylabel('Recall')
 plt.title("Recall VS Sakoe-Chiba lengths")
 plt.savefig('./query_files/plots/recall_VS_sc.png', format='png', bbox_inches='tight')
 
+# F-Score plot
 plt.figure()
 plt.plot(pd_measurements["sakoe_chiba"], pd_measurements["f_score"])
 plt.legend()
@@ -94,11 +96,13 @@ plt.ylabel('F-Score')
 plt.title("F-Score VS Sakoe-Chiba lengths")
 plt.savefig('./query_files/plots/f_score_VS_sc.png', format='png', bbox_inches='tight')
 
+# Run time plot
 plt.figure()
 plt.plot(pd_measurements["sakoe_chiba"], pd_measurements["tot_time"])
 plt.legend()
 plt.xlabel('Sakoe-Chiba lengths')
 plt.ylabel('Time (s)')
+plt.ylim([0,10])
 plt.title("Time VS Sakoe-Chiba lengths")
 plt.savefig('./query_files/plots/time_VS_sc.png', format='png', bbox_inches='tight')
 
