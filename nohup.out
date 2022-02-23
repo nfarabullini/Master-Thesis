@@ -1,0 +1,145 @@
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+181.8664629459381
+Traceback (most recent call last):
+  File "build_dendro_lb_keough.py", line 26, in <module>
+    files_ls = compute_files_ls(path)
+  File "/home/ubuntu/nikki_msc/Master-Thesis/common_funs.py", line 39, in compute_files_ls
+    for file in sorted(os.listdir(path))[1:]:
+FileNotFoundError: [Errno 2] No such file or directory: '../files_dances'
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+182.34268450737
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+0     8.258639
+1     7.999542
+2     8.017941
+3     8.062352
+4     8.193904
+5     8.123175
+6     8.140953
+7     8.170114
+8     8.191688
+9     8.140553
+10    8.316602
+11    8.180650
+12    8.192904
+13    8.216765
+14    8.308683
+15    8.224069
+16    8.279144
+17    8.362782
+18    8.185177
+19    8.187185
+Name: tot_time, dtype: float64
