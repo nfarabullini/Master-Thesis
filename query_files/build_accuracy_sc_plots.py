@@ -16,7 +16,6 @@ index_query = 5
 path = "./files_dances"
 n_videos = 52
 N = 15
-sakoe_chiba_ls = [3, 7, 11, 15, 19]
 # solution set of videos from DTW only
 ls_solutions = [18, 20, 21, 26]
 ls_measurements = []
@@ -69,6 +68,8 @@ for sakoe_chiba in range(1, 21):
     ls_measurements.append([sakoe_chiba, recall, precision, f_score, tot_time])
 
 pd_measurements = pd.DataFrame(ls_measurements, columns = ['sakoe_chiba', 'recall', 'precision', 'f_score', 'tot_time'])
+
+print(pd_measurements["tot_time"])
 plt.figure()
 plt.plot(pd_measurements["sakoe_chiba"], pd_measurements["precision"])
 plt.legend()
