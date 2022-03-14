@@ -17,7 +17,7 @@ sc_3 = 19
 sc_4 = 3
 plt.figure()
 # add comparison with DTW only
-plt.plot([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], [4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680])
+plt.plot([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], [4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680], label = "DTW only")
 plt.plot(read_file["N"][read_file["Sakoe_Chiba"].isin([sc_4])], read_file["Time (s)"][read_file['Sakoe_Chiba'].isin([sc_4])], label = "Sakoe-Chiba = 3")
 plt.plot(read_file["N"][read_file["Sakoe_Chiba"].isin([sc_1])], read_file["Time (s)"][read_file['Sakoe_Chiba'].isin([sc_1])], label = "Sakoe-Chiba = 7")
 plt.plot(read_file["N"][read_file["Sakoe_Chiba"].isin([sc_2])], read_file["Time (s)"][read_file['Sakoe_Chiba'].isin([sc_2])], label = "Sakoe-Chiba = 13")
@@ -34,7 +34,7 @@ N_3 = 19
 N_4 = 5
 plt.figure()
 # add comparison with DTW only
-plt.plot([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], [4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680])
+plt.plot([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], [4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680, 4680], label = "DTW only")
 plt.plot(read_file["Sakoe_Chiba"][read_file["N"].isin([N_4])], read_file["Time (s)"][read_file['N'].isin([N_4])], label = "MBRs = 5")
 plt.plot(read_file["Sakoe_Chiba"][read_file["N"].isin([N_1])], read_file["Time (s)"][read_file['N'].isin([N_1])], label = "MBRs = 10")
 plt.plot(read_file["Sakoe_Chiba"][read_file["N"].isin([N_2])], read_file["Time (s)"][read_file['N'].isin([N_2])], label = "MBRs = 15")
